@@ -8,6 +8,9 @@ dotenv.config()
 import { respond } from '../utils/respond.js';
 import { Freelancer } from '../models/Freelancer.js';
 import { Client } from '../models/Client.js';
+import mailSender from '../utils/mailSender.js';
+import { forgototpTemplate } from '../mail/forgotVerificationTemplate.js';
+import { otpTemplate } from '../mail/emailVerificationTemplate.js';
 const tokenGenerator = async (email, sessionId) => {
     const payload = {
         email,
@@ -33,7 +36,7 @@ const sendOtp = async (email) => {
             const otpBody = await OTP.create(otpPayload);
             console.log(otpBody)
             if (otpBody) {
-                // await queueEmail(email, "Verification email send by ServiceHive", otpTemplate(otp));
+                await mailSender(email, "Verification email send by ServiceHive", otpTemplate(otp));
             }
             return otp;
         } else {
@@ -254,7 +257,7 @@ export const resendOtp = async (req, res) => {
                     const otpBody = await ForgotPassword.create({ email: lowerdemail, otp });
                     console.log("OTP body : ", otpBody);
                     if (otpBody) {
-                        // await queueEmail(lowerdemail, "Forgot Password verification email send by ServiceHive", forgototpTemplate(otp));
+                        await mailSender(lowerdemail, "Forgot Password verification email send by ServiceHive", forgototpTemplate(otp));
                     }
                     return res.status(200).json({
                         success: true,
@@ -318,7 +321,7 @@ export const sendForgotPasswordOtp = async (req, res) => {
             const otpBody = await ForgotPassword.create({ email: lowerdemail, otp });
             console.log("OTP body : ", otpBody);
             if (otpBody) {
-                // await queueEmail(lowerdemail, "Forgot Password verification email send by ServiceHive", forgototpTemplate(otp));
+                await mailSender(lowerdemail, "Forgot Password verification email send by ServiceHive", forgototpTemplate(otp));
             }
             return res.status(200).json({
                 success: true,

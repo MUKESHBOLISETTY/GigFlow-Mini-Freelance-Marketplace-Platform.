@@ -46,6 +46,17 @@ const FreelancerSchema = new mongoose.Schema(
             required: true,
             default: false,
         },
+        additionalDetails: {
+            title: { type: String, required: true },
+            bio: String,
+            skills: [{ type: String, index: true }],
+            totalEarnings: { type: Number, default: 0 }
+        },
+        portfolio: [{
+            title: String,
+            url: String,
+            projectRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' }
+        }],
         bids: [
             {
                 type: mongoose.Schema.Types.ObjectId,

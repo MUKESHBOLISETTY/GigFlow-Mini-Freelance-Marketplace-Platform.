@@ -6,6 +6,7 @@ const ClientSchema = new mongoose.Schema(
             required: true,
             trim: true,
         },
+        companyName: { type: String, trim: true },
         email: {
             type: String,
             required: true,
@@ -45,6 +46,10 @@ const ClientSchema = new mongoose.Schema(
             type: Boolean,
             required: true,
             default: false,
+        },
+        hiringStats: {
+            totalProjectsPosted: { type: Number, default: 0 },
+            totalSpent: { type: Number, default: 0 },
         },
         projects: [
             {
