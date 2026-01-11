@@ -450,3 +450,16 @@ export const resetPassword = async (req, res) => {
         return respond(res, "Error Occured", 500, false);
     }
 }
+
+export const getUserData = async (email) => {
+    try {
+        const user = await Freelancer.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'bids' }).lean() || await Client.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'projects' }).lean();
+        if (user?.verified !== true || !user) {
+            throw new Error("User not found");
+        } else {
+            return user;
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}

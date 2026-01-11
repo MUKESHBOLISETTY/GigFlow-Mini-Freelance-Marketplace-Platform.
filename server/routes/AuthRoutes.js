@@ -1,6 +1,8 @@
 import express from "express";
 import { rateLimit } from 'express-rate-limit'
 import { login, resendOtp, resetPassword, sendForgotPasswordOtp, signup, verifyForgotPasswordOtp, verifyOtp } from "../controllers/AuthController.js";
+import { getUser } from "../middlewares/ServerSentUpdates.js";
+import { authenticateUser } from "../middlewares/AuthMiddleware.js";
 const router = express.Router();
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -22,5 +24,7 @@ router.post("/sendForgotPasswordOtp", limiter, sendForgotPasswordOtp);
 router.post("/verifyForgotPasswordOtp", limiter, verifyForgotPasswordOtp);
 
 router.post("/resetPassword", limiter, resetPassword);
+
+router.get("/getUser/:email", authenticateUser, getUser);
 
 export default router;
