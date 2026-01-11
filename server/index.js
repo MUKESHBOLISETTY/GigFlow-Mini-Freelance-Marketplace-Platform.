@@ -5,7 +5,6 @@ import { connect } from './config/database.js';
 import userRoutes from './routes/AuthRoutes.js';
 import dotenv from "dotenv"
 import helmet from 'helmet';
-import compression from 'compression';
 dotenv.config()
 
 const app = express();
