@@ -15,6 +15,11 @@ const FreelancerSchema = new mongoose.Schema(
             trim: true,
             // match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         },
+        type: {
+            type: String,
+            required: true,
+            default: 'Freelancer'
+        },
         phoneNumber: {
             type: Number,
             required: true,

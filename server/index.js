@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 import { connect } from './config/database.js';
 import userRoutes from './routes/AuthRoutes.js';
+import projectRoutes from './routes/ProjectRoutes.js';
 import dotenv from "dotenv"
 import helmet from 'helmet';
 dotenv.config()
@@ -25,6 +26,7 @@ app.use(cors(corsoptions));
 app.set('trust proxy', 'loopback')
 
 app.use("/api/v1/auth", userRoutes);
+app.use("/api/v1/project", projectRoutes);
 
 app.get('/', (req, res) => {
     return res.json({
