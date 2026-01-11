@@ -46,7 +46,12 @@ const FreelancerSchema = new mongoose.Schema(
             required: true,
             default: false,
         },
-
+        bids: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Bid",
+            }
+        ]
     },
     {
         timestamps: true,
