@@ -3,6 +3,7 @@ import { sendProjectsClientUpdater } from "../middlewares/ServerSentUpdates.js";
 import { Client } from "../models/Client.js";
 import { Project } from "../models/Project.js";
 import { respond } from "../utils/respond.js";
+import { Bid } from "../models/Bid.js";
 
 export const createProject = async (req, res) => {
     try {

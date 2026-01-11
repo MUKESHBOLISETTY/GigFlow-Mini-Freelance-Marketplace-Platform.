@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(helmet());
 
 const corsoptions = {
-    origin: process.env.origin,
+    origin: 'http://localhost:5173',
     methods: "GET, POST, PUT, DELETE, HEAD, PATCH",
     credentials: true,
 }

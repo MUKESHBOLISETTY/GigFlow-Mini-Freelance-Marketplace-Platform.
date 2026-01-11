@@ -8,7 +8,6 @@ dotenv.config();
 export const authenticateUser = async (req, res, next) => {
     try {
         const token = req.cookies.token;
-        console.log(token);
         if (!token) {
             return res.status(401).json({ success: false, message: "Access denied. No token provided." });
         }

@@ -8,7 +8,6 @@ const api = axios.create({
     withCredentials: true
 });
 
-//Add response interceptor to handle common errors
 api.interceptors.response.use(
     (response) => response,
     (error) => {
@@ -26,7 +25,12 @@ api.interceptors.response.use(
 // AUTH ENDPOINTS
 export const authApi = {
     login: (data) => api.post('/auth/login', data),
+    signup: (data) => api.post('/auth/signup', data),
+    verifyOtp: (email, otp) => api.post('/auth/verifyOtp', { email, otp }),
+    resendOtp: (email, type) => api.post('/auth/resendOtp', { email, type }),
+    sendForgotPasswordOtp: (email) => api.post('/auth/sendForgotPasswordOtp', { email }),
+    verifyForgotPasswordOtp: (email, otp) => api.post('/auth/verifyForgotPasswordOtp', { email, otp }),
+    resetPassword: (data) => api.post('/auth/resetPassword', data),
 }
-
 
 export default api; 
