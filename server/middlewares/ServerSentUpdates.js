@@ -1,6 +1,6 @@
 import { getUserData } from "../controllers/AuthController.js";
+import { getClientProjects } from "../controllers/ProjectController.js";
 export const Clients = new Set();
-export const SubmissionsClient = new Set();
 export const users = new Map();
 export const getUser = async (req, res) => {
     try {
@@ -75,3 +75,54 @@ export const sendUserUpdater = async (email) => {
         }
     }
 };
+
+export const getProjectsClient = async (req, res) => {
+    try {
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        res.setHeader('X-Accel-Buffering', 'no');
+        let client = false;
+        if (req.user?.type === "Client") {
+            client = true;
+        }
+        const initialData = await getClientProjects(req.user._id, client);
+        res.write(`event: initial_data\n`);
+        Clients.add(res);
+        res.write(`data: ${JSON.stringify(initialData)}\n\n`);
+        console.log(`SSE client for projects has been connected. Sent initial data.`);
+
+        const heartbeatInterval = setInterval(() => {
+            res.write('event: keep-alive\n\n');
+        }, 30000);
+
+        req.on('close', () => {
+            clearInterval(heartbeatInterval);
+        });
+
+    } catch (error) {
+        if (!res.headersSent) {
+            return res.status(500).json({ success: false, message: 'Failed to establish SSE connection.' });
+        } else {
+            res.write(`event: error\n`);
+            res.write(`data: ${JSON.stringify({ message: 'Failed to retrieve initial projects data.', code: 'INITIAL_DATA_ERROR' })}\n\n`);
+            res.end();
+        }
+    }
+}
+
+export const sendProjectsClientUpdater = async (clientId) => {
+    for (const client of Clients) {
+        try {
+            const updatedProjects = await getClientProjects(clientId);
+            client.write(`event: projects_update\n`);
+            client.write(`data: ${JSON.stringify(updatedProjects)}\n\n`);
+            console.log(`Sent updated projects data`);
+        } catch (err) {
+            console.error("Failed to send SSE to a client. Removing.");
+            client.write(`event: error\n`);
+            client.write(`data: ${JSON.stringify({ message: 'Failed to retrieve projects data.', code: 'SEND_UPDATE_ERROR' })}\n\n`);
+            Clients.delete(client);
+        }
+    }
+}

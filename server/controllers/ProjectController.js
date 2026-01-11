@@ -1,3 +1,4 @@
+import { sendProjectsClientUpdater } from "../middlewares/ServerSentUpdates.js";
 import { Client } from "../models/Client.js";
 import { Project } from "../models/Project.js";
 import { respond } from "../utils/respond.js";
@@ -45,6 +46,8 @@ export const createProject = async (req, res) => {
             $push: { projects: newProject._id },
         });
 
+        await sendProjectsClientUpdater(req.user._id)
+
         return res.status(201).json({
             success: true,
             message: "project_posted",
@@ -56,21 +59,16 @@ export const createProject = async (req, res) => {
     }
 };
 
-export const getClientProjects = async (req, res) => {
+export const getClientProjects = async (clientId, verified = false) => {
     try {
-        if (req?.user.type !== "Client") {
-            return res.status(403).json({
-                success: false,
-                message: "Access denied."
-            });
+        const projects = verified ? await Project.find({ clientId }).sort({ createdAt: -1 }) : null;
+        if (!projects) {
+            throw new Error("Projects not found");
+        } else {
+            return projects;
         }
-        const projects = await Project.find({ clientId: req.user._id }).sort({ createdAt: -1 });
-
-        return res.status(200).json({
-            success: true,
-            projects
-        });
     } catch (error) {
-        return respond(res, "Error Occured", 500, false);
+        console.log(err)
     }
 };
+
