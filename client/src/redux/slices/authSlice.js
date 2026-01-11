@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 const initialState = {
   loading: false,
   email: localStorage.getItem("email") ? localStorage.getItem("email") : null,
-  is_logged_in: localStorage.getItem("is_logged_in") ? localStorage.getItem("is_logged_in") : false,
+  is_logged_in: Cookies.get('is_logged_in') ? Cookies.get('is_logged_in') : null,
   user: null,
   error: null,
   navigation: null
@@ -29,7 +30,6 @@ const authSlice = createSlice({
       state.loading = false;
     },
     resetAuth: (state) => {
-      state.token = null;
       state.email = null;
       state.user = null;
     }

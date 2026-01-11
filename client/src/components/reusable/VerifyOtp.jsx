@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { X, Loader2 } from 'lucide-react';
+import { X, Loader2, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { setEmail, setToken } from '../../redux/slices/authSlice';
+import { setEmail } from '../../redux/slices/authSlice';
 const RESEND_SECONDS = 20;
 
 const VerifyOtp = ({ setShowOtpPopup, email }) => {
@@ -46,10 +46,8 @@ const VerifyOtp = ({ setShowOtpPopup, email }) => {
                 duration: 2000,
                 position: 'bottom-right',
             });
-            localStorage.setItem("token", response.data.data.token);
-            localStorage.setItem("email", response.data.data.email);
-            dispatch(setToken(response.data.data.token));
-            dispatch(setEmail(response.data.data.email));
+            localStorage.setItem("email", response.data.data);
+            dispatch(setEmail(response.data.data));
             if (navigation) {
                 navigate(navigation)
             } else {
@@ -66,77 +64,84 @@ const VerifyOtp = ({ setShowOtpPopup, email }) => {
     };
     return (
         <>
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-                onClick={closeOtpPopup}
-            >
-                <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.9, opacity: 0 }}
-                    transition={{ type: "spring", duration: 0.5 }}
-                    className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-serif font-bold text-gray-900">
-                            Verify Your Email
-                        </h2>
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div
+                    className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+                    onClick={closeOtpPopup}
+                ></div>
+
+                <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in duration-300">
+
+                    <div className="p-8">
                         <button
                             onClick={closeOtpPopup}
-                            className="text-gray-400 hover:text-gray-600"
+                            className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors"
                         >
-                            <X className="w-6 h-6" />
+                            <X size={24} />
                         </button>
-                    </div>
 
-                    <p className="text-gray-600 font-sans mb-6 text-center">
-                        We've sent a verification code to your email address. Please enter it below to complete your registration.
-                    </p>
-
-                    <form onSubmit={handleOtpVerification} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-sans font-medium text-gray-700 mb-2">
-                                Enter OTP
-                            </label>
-                            <input
-                                type="text"
-                                value={otp}
-                                onChange={(e) => setOtp(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent font-sans text-center text-lg tracking-widest"
-                                placeholder="000000"
-                                maxLength={6}
-                                required
-                            />
+                        <div className="text-center space-y-4 mb-8">
+                            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 text-blue-500 rounded-2xl">
+                                <ShieldCheck size={32} />
+                            </div>
+                            <div className="space-y-1">
+                                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+                                    Verify Your Email
+                                </h2>
+                                <p className="text-sm text-slate-500">
+                                    We've sent a 6-digit code to your inbox.
+                                </p>
+                            </div>
                         </div>
 
-                        <p className="text-sm text-gray-600 text-center">
-                            Didn't receive the code?{' '}
-                            <button onClick={handleResentOtp} disabled={!canResend} type="button" className={`text-cyan-600 hover:text-cyan-700 font-medium ${canResend ? "text-cyan-600 hover:text-cyan-500" : "text-gray-400 cursor-not-allowed"}`}>
-                                {canResend ? "Resend OTP" : `Resend in ${secondsLeft}s`}
-                            </button>
-                        </p>
+                        <form onSubmit={handleOtpVerification} className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-sm font-semibold text-slate-700 ml-1">
+                                    Security Code
+                                </label>
+                                <input
+                                    type="text"
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value)}
+                                    className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-center text-2xl font-bold tracking-[0.5em] text-slate-900 placeholder:text-slate-300"
+                                    placeholder="000000"
+                                    maxLength={6}
+                                    required
+                                />
+                            </div>
 
-                        <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-cyan-600 text-white py-3 px-4 rounded-lg font-sans font-semibold hover:bg-cyan-700 transition-all duration-200 mt-6"
-                        >
-                            {loading ? (
-                                <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />
-                            ) :
-                                <>
-                                    Verify & Complete Registration
-                                </>}
-                        </motion.button>
-                    </form>
-                </motion.div>
-            </motion.div>
+                            <div className="text-center">
+                                <p className="text-sm text-slate-500">
+                                    Didn't receive the code?{' '}
+                                    <button
+                                        onClick={handleResentOtp}
+                                        disabled={!canResend}
+                                        type="button"
+                                        className={`font-bold transition-colors ${canResend
+                                            ? "text-blue-600 hover:text-blue-700 hover:underline"
+                                            : "text-slate-400 cursor-not-allowed"
+                                            }`}
+                                    >
+                                        {canResend ? "Resend OTP" : `Resend in ${secondsLeft}s`}
+                                    </button>
+                                </p>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                            >
+                                {loading ? (
+                                    <Loader2 className="animate-spin h-5 w-5" />
+                                ) : (
+                                    "Verify & Complete Registration"
+                                )}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

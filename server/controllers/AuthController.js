@@ -7,6 +7,7 @@ import dotenv from "dotenv"
 dotenv.config()
 import { respond } from '../utils/respond.js';
 import { Freelancer } from '../models/Freelancer.js';
+import { ForgotPassword } from '../models/ForgotPassword.js';
 import { Client } from '../models/Client.js';
 import mailSender from '../utils/mailSender.js';
 import { forgototpTemplate } from '../mail/forgotVerificationTemplate.js';
@@ -321,7 +322,7 @@ export const sendForgotPasswordOtp = async (req, res) => {
             const otpBody = await ForgotPassword.create({ email: lowerdemail, otp });
             console.log("OTP body : ", otpBody);
             if (otpBody) {
-                await mailSender(lowerdemail, "Forgot Password verification email send by ServiceHive", forgototpTemplate(otp));
+                // await mailSender(lowerdemail, "Forgot Password verification email send by ServiceHive", forgototpTemplate(otp));
             }
             return res.status(200).json({
                 success: true,
@@ -334,6 +335,7 @@ export const sendForgotPasswordOtp = async (req, res) => {
             });
         }
     } catch (error) {
+        console.log(error)
         return respond(res, "Error Occured", 500, false);
     }
 }

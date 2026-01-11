@@ -5,20 +5,22 @@ import TestPage from './pages/TestPage';
 import useAuth from './hooks/useAuth';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import SignUp from './pages/auth/SignUp';
+import Login from './pages/auth/Login';
+import Cookies from 'js-cookie';
 
 function App() {
   const { loading, is_logged_in, user, error, email } = useSelector((state) => state.auth);
 
   const { setupUserSSE } = useAuth();
-
   useEffect(() => {
-    if (is_logged_in) {
-      const cleanupUser = setupUserSSE();
-      return () => {
-        cleanupUser();
-      };
-    }
-  }, [is_logged_in, setupUserSSE]);
+    if (is_logged_in !== "true") return;
+    const cleanupUser = setupUserSSE();
+    return () => {
+      cleanupUser();
+    };
+
+  }, [is_logged_in, email, setupUserSSE]);
   return (
     <AppContent />
   );
@@ -30,6 +32,8 @@ function AppContent() {
       <Routes>
 
         <Route path='/' element={<TestPage />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<SignUp />} />
 
       </Routes>
     </>

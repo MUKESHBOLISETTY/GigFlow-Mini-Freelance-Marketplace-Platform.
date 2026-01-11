@@ -17,13 +17,12 @@ export const useAuth = () => {
     const { loading, is_logged_in, user, error, email, navigation } = useSelector((state) => state.auth);
     const navigate = useNavigate();
     const location = useLocation();
-
     const setupUserSSE = useCallback(() => {
         let eventSource;
         let reconnectTimeout;
-        if (!is_logged_in) {
+        if (is_logged_in !== "true") {
             dispatch(setError("Authentication required for real-time updates."));
-            return;
+            return () => { };;
         }
         const connect = () => {
             eventSource = new EventSource(`${import.meta.env.VITE_API_URL}/auth/getUser/${email}`, { withCredentials: true });
@@ -162,8 +161,8 @@ export const useAuth = () => {
             const response = await authApi.login(data);
             dispatch(setLoading(false));
             if (response.data.message == "userlogin") {
-                localStorage.setItem("email", response.data.UserSchema.email);
-                dispatch(setEmail(response.data.UserSchema.email));
+                localStorage.setItem("email", response.data.UserSchema);
+                dispatch(setEmail(response.data.UserSchema));
                 if (navigation) {
                     navigate(navigation)
                 }

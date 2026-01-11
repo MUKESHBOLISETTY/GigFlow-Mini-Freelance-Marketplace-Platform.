@@ -37,5 +37,5 @@ app.get('/', (req, res) => {
 
 
 app.listen(port, () => {
-    console.log(`Worker ${process.pid} is listening on port ${port}.`);
+    console.log(`Worker is listening on port ${port}.`);
 });

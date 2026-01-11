@@ -9,8 +9,12 @@ export default {
       fontFamily: {
         'serif': ['Crimson Text', 'serif'],
         'sans': ['Inter', 'sans-serif'],
+        display: ["Inter", "sans-serif"],
       },
       colors: {
+        primary: "#1d8cf8",
+        "background-light": "#f8fafc",
+        "background-dark": "#0f172a",
         calmBlue: {
           50: '#EFF6FB',
           100: '#D6E7FA',
@@ -96,6 +100,9 @@ export default {
           600: '#B84F3E',
           700: '#8A382B',
         },
+      },
+      borderRadius: {
+        DEFAULT: "0.75rem",
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out',
