@@ -6,11 +6,12 @@ const ProjectSchema = new mongoose.Schema(
         clientId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Client",
+            required: true
         },
-        budgetType: { type: String, enum: ['fixed', 'hourly'], default: 'fixed' },
+        budgetType: { type: String, enum: ['fixed', 'hourly'], default: 'fixed', required: true },
         budgetRange: {
-            min: Number,
-            max: Number
+            type: String,
+            required: true
         },
         skillsRequired: [String],
         status: {
@@ -18,7 +19,7 @@ const ProjectSchema = new mongoose.Schema(
             enum: ['open', 'assigned', 'rejected'],
             default: 'open'
         },
-        contractAddress: { type: String },
+        contractAddress: { type: String, required: true },
         deadline: Date
     },
     {

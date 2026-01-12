@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { Project } from "../models/Project";
-import { Bid } from "../models/Bid";
-import { respond } from "../utils/respond";
+import { Project } from "../models/Project.js";
+import { Bid } from "../models/Bid.js";
+import { respond } from "../utils/respond.js";
 
 export const hireFreelancer = async (req, res) => {
     if (req?.user.type !== "Client") {

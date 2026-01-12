@@ -1,0 +1,119 @@
+import React, { useEffect, useState } from 'react';
+import {
+  Search,
+  SlidersHorizontal,
+  ChevronDown
+} from 'lucide-react';
+import Footer from '../../components/client/Footer';
+import Header from '../../components/client/Header';
+import { useDispatch, useSelector } from 'react-redux';
+import { setHasMore, setJobs, setPage } from '../../redux/slices/jobsSlice';
+import JobCard from '../../components/reusable/JobCard';
+import useGigs from '../../hooks/useGigs';
+
+const FindWorkPage = () => {
+  const dispatch = useDispatch()
+  const { fetchGigs } = useGigs()
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const { jobs_loading, jobs, page, hasMore } = useSelector((state) => state.jobs);
+  const sentinelRef = React.useRef(null);
+
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (!first.isIntersecting) return;
+        if (!hasMore || jobs_loading) return;
+        if (isFetchingRef.current) return;
+
+        isFetchingRef.current = true;
+
+        const nextPage = page + 1;
+
+        dispatch(setPage(nextPage));
+
+        fetchGigs({ searchQuery, page: nextPage })
+          .finally(() => {
+            isFetchingRef.current = false;
+          });
+      },
+      { root: null, rootMargin: "200px", threshold: 0 }
+    );
+
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [page, hasMore, jobs_loading, searchQuery]);
+
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+    setJobs([]);
+    fetchGigs({ page });
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [searchQuery]);
+  return (
+    <div className="bg-slate-50 dark:bg-[#101922] font-sans text-[#0d141b] dark:text-slate-100 min-h-screen flex flex-col">
+      <Header />
+
+      <main className="flex-1 w-full mx-auto pb-24">
+        <div className="px-4 py-3 bg-white dark:bg-[#1a2632]">
+          <div className="flex h-12 w-full max-w-lg flex-1 items-stretch rounded-xl shadow-sm bg-[#f0f2f5] dark:bg-[#2a3a4a]">
+            <div className="text-[#4c739a] flex items-center justify-center pl-4">
+              <Search size={20} />
+            </div>
+            <input
+              className="flex w-full min-w-0 flex-1 rounded-r-xl text-[#0d141b] dark:text-white focus:outline-none border-none bg-transparent h-full placeholder:text-[#4c739a] px-4 pl-2 text-base font-normal"
+              placeholder="Search for projects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-2 p-4 overflow-x-auto bg-white dark:bg-[#1a2632] scrollbar-hide">
+          <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#137fec] text-white px-4 shadow-sm">
+            <span className="text-sm font-semibold">Filter</span>
+            <SlidersHorizontal size={16} />
+          </button>
+          <FilterButton label="Job Type" />
+          <FilterButton label="Budget" />
+          <FilterButton label="Experience" />
+        </div>
+
+        <div className="flex items-center justify-between px-4 pt-6 pb-2">
+          <h3 className="text-[#0d141b] dark:text-white text-lg font-bold leading-tight tracking-tight">Recent Projects</h3>
+          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">1,248 Results</span>
+        </div>
+
+        <div className="space-y-3 p-4">
+          {jobs.map((job) => (
+            <JobCard key={job.id} job={job} />
+          ))}
+
+          {jobs_loading && (
+            <div className="py-4 text-center text-sm text-slate-500">
+              Loading more...
+            </div>
+          )}
+
+          <div ref={sentinelRef} className="h-6" />
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+const FilterButton = ({ label }) => (
+  <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f5] dark:bg-[#2a3a4a] px-4">
+    <span className="text-[#0d141b] dark:text-slate-200 text-sm font-medium">{label}</span>
+    <ChevronDown size={16} className="text-slate-400" />
+  </button>
+);
+
+export default FindWorkPage;

@@ -33,4 +33,8 @@ export const authApi = {
     resetPassword: (data) => api.post('/auth/resetPassword', data),
 }
 
+export const gigsApi = {
+    getProjects: (params) => api.get('/gigs/', {params}),
+}
+
 export default api; 

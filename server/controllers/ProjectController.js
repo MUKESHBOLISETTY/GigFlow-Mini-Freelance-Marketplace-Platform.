@@ -8,10 +8,7 @@ import { Bid } from "../models/Bid.js";
 export const createProject = async (req, res) => {
     try {
         if (req?.user.type !== "Client") {
-            return res.status(403).json({
-                success: false,
-                message: "Access denied."
-            });
+            return respond(res, "Access denied.", 403, false);
         }
 
         const {
@@ -25,12 +22,14 @@ export const createProject = async (req, res) => {
         } = req.body;
 
         if (!title || !description) {
-            return res.status(400).json({
-                success: false,
-                message: "Title and description are required."
-            });
+            return respond(res, "Title and description are required.", 400, false);
+        }
+        if (!budgetType || !budgetRange || !skillsRequired || !contractAddress || !deadline) {
+            return respond(res, "Fill All Fields.", 400, false);
         }
 
+        const [day, month, year] = deadline.split('/');
+        const formattedDeadline = new Date(`${year}-${month}-${day}`);
         const newProject = new Project({
             title,
             description,
@@ -39,7 +38,7 @@ export const createProject = async (req, res) => {
             budgetRange,
             skillsRequired,
             contractAddress,
-            deadline,
+            deadline: formattedDeadline,
             status: 'open'
         });
 
@@ -75,3 +74,92 @@ export const getClientProjects = async (clientId, verified = false) => {
     }
 };
 
+
+export const fetchAllProjects = async (req, res) => {
+    const { searchType,
+        jobType,
+        status,
+        skills,
+        budgetRange,
+        deadlineBefore,
+        page = 1,
+        limit = 1
+    } = req.query;
+    const matchStage = {};
+    const pageNum = Math.max(1, Number(page));
+    const limitNum = Math.max(1, Number(limit));
+    try {
+        if (searchType) {
+            matchStage.$or = [
+                { title: { $regex: searchType, $options: "i" } },
+                { description: { $regex: searchType, $options: "i" } }
+            ];
+        }
+        if (jobType) {
+            matchStage.budgetType = jobType;
+        }
+        if (jobType) {
+            matchStage.budgetRange = budgetRange;
+        }
+        if (status) {
+            matchStage.status = status;
+        }
+        if (skills && skills.length > 0) {
+            matchStage.skillsRequired = { $in: skills };
+        }
+        if (deadlineBefore) {
+            matchStage.deadline = { $lte: new Date(deadlineBefore) };
+        }
+        const total = await Project.countDocuments(matchStage);
+
+        const pipeline = [
+            { $match: matchStage },
+            {
+                $lookup: {
+                    from: "clients",
+                    localField: "clientId",
+                    foreignField: "_id",
+                    as: "client"
+                }
+            },
+            { $unwind: { path: "$client", preserveNullAndEmptyArrays: true } },
+
+            {
+                $sort: {
+                    createdAt: -1
+                }
+            },
+            { $skip: (pageNum - 1) * limitNum },
+            { $limit: limitNum },
+            {
+                $project: {
+                    title: 1,
+                    description: 1,
+                    budgetType: 1,
+                    budgetRange: 1,
+                    skillsRequired: 1,
+                    contractAddress: 1,
+                    status: 1,
+                    deadline: 1,
+                    createdAt: 1,
+                    client: {
+                        _id: 1,
+                        username: 1,
+                        email: 1
+                    }
+                }
+            }
+        ];
+        const projects = await Project.aggregate(pipeline);
+        const hasMore = pageNum * limitNum < total;
+        res.json({
+            message: "projects_received",
+            page,
+            limit,
+            hasMore,
+            projects,
+        });
+    } catch (error) {
+        return respond(res, "Error Occured", 500, false);
+    }
+};

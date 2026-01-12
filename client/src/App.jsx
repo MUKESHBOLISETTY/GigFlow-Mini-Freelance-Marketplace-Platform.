@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import SignUp from './pages/auth/SignUp';
 import Login from './pages/auth/Login';
 import Cookies from 'js-cookie';
+import FindWorkPage from './pages/client/FindWorkPage';
 
 function App() {
   const { loading, is_logged_in, user, error, email } = useSelector((state) => state.auth);
@@ -31,7 +32,7 @@ function AppContent() {
       <Toaster />
       <Routes>
 
-        <Route path='/' element={<TestPage />} />
+        <Route path='/' element={<FindWorkPage />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<SignUp />} />
 

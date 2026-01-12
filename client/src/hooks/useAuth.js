@@ -36,8 +36,8 @@ export const useAuth = () => {
                     console.log(parseddata)
                     dispatch(setLoading(false));
                     if (parseddata?.type == "Client") {
-                        if (!location?.pathname?.startsWith('/client')) {
-                            navigate('/client');
+                        if (!location?.pathname?.startsWith('/')) {
+                            navigate('/');
                         }
                     } else if (location?.pathname?.startsWith('/login') || location?.pathname?.startsWith('/signup')) {
                         if (navigation) {
@@ -222,9 +222,6 @@ export const useAuth = () => {
     };
 
     return {
-        loading,
-        user,
-        error,
         signUp,
         handleLogout,
         verifyOtp,
