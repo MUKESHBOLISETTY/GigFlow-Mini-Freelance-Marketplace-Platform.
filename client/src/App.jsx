@@ -9,6 +9,7 @@ import SignUp from './pages/auth/SignUp';
 import Login from './pages/auth/Login';
 import Cookies from 'js-cookie';
 import FindWorkPage from './pages/client/FindWorkPage';
+import ProjectDetailsPage from './pages/client/ProjectDetailsPage';
 
 function App() {
   const { loading, is_logged_in, user, error, email } = useSelector((state) => state.auth);
@@ -35,6 +36,7 @@ function AppContent() {
         <Route path='/' element={<FindWorkPage />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<SignUp />} />
+        <Route path='/project/:id' element={<ProjectDetailsPage />} />
 
       </Routes>
     </>

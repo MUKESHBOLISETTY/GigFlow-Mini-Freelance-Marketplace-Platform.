@@ -74,6 +74,22 @@ export const getClientProjects = async (clientId, verified = false) => {
     }
 };
 
+export const getProjectById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return respond(res, "Project Not Found", 400, false);
+        }
+        const project = await Project.findOne({ _id: id }).populate({ path: 'clientId' });
+        if (!project) {
+            return respond(res, "Project Not Found", 400, false);
+        }
+        return respond(res, "project_found", 200, true, project);
+
+    } catch (error) {
+        return respond(res, "Error Occured", 500, false);
+    }
+};
 
 export const fetchAllProjects = async (req, res) => {
     const { searchType,

@@ -4,7 +4,6 @@ import {
   SlidersHorizontal,
   ChevronDown
 } from 'lucide-react';
-import Footer from '../../components/client/Footer';
 import Header from '../../components/client/Header';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHasMore, setJobs, setPage } from '../../redux/slices/jobsSlice';
@@ -15,7 +14,6 @@ const FindWorkPage = () => {
   const dispatch = useDispatch()
   const { fetchGigs } = useGigs()
   const [searchQuery, setSearchQuery] = useState('');
-
   const { jobs_loading, jobs, page, hasMore } = useSelector((state) => state.jobs);
   const sentinelRef = React.useRef(null);
 
@@ -31,7 +29,6 @@ const FindWorkPage = () => {
         const nextPage = page + 1;
 
         dispatch(setPage(nextPage));
-
         fetchGigs({ searchType: searchQuery, page: nextPage })
       },
       { root: null, rootMargin: "200px", threshold: 0 }
@@ -97,7 +94,6 @@ const FindWorkPage = () => {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 };

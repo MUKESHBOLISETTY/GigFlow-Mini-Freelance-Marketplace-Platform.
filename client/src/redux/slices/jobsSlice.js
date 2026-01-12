@@ -3,7 +3,8 @@ const initialState = {
     jobs_loading: false,
     jobs: [],
     page: 1,
-    hasMore: false
+    hasMore: false,
+    selectedProject: null
 };
 
 const jobsSlice = createSlice({
@@ -29,10 +30,13 @@ const jobsSlice = createSlice({
         },
         setHasMore(state, value) {
             state.hasMore = value.payload;
+        },
+        setSelectedProject(state, value) {
+            state.selectedProject = value.payload;
         }
     },
 });
 
-export const { setJobsLoading, setJobs, appendJobs, resetJobs, setPage, setHasMore } = jobsSlice.actions;
+export const { setJobsLoading, setJobs, appendJobs, resetJobs, setPage, setHasMore, setSelectedProject } = jobsSlice.actions;
 
 export default jobsSlice.reducer;

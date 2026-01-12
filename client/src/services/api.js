@@ -35,6 +35,7 @@ export const authApi = {
 
 export const gigsApi = {
     getProjects: (params) => api.get('/gigs', {params}),
+    getProjectById: (id) => api.get(`/gigs/${id}`),
 }
 
 export default api; 

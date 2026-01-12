@@ -4,7 +4,7 @@ import { gigsApi } from '../services/api';
 import toast from 'react-hot-toast';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCallback } from 'react';
-import { setJobsLoading, setJobs, appendJobs, resetJobs, setPage, setHasMore } from '../redux/slices/jobsSlice';
+import { setJobsLoading, setJobs, appendJobs, resetJobs, setPage, setHasMore, setSelectedProject } from '../redux/slices/jobsSlice';
 
 export const useGigs = () => {
     const dispatch = useDispatch();
@@ -29,9 +29,25 @@ export const useGigs = () => {
         }
     };
 
+    const fetchGigById = async (data) => {
+        try {
+            dispatch(setJobsLoading(true));
+            const response = await gigsApi.getProjectById(data);
+            if (response.data.message === "project_found") {
+                dispatch(setSelectedProject(response.data.data))
+            }
+            dispatch(setJobsLoading(false));
+            return response;
+        } catch (error) {
+            dispatch(setJobsLoading(false));
+            throw error;
+        }
+    };
+
 
     return {
-        fetchGigs
+        fetchGigs,
+        fetchGigById
     };
 };
 

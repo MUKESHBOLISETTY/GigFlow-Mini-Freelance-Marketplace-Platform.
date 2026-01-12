@@ -1,7 +1,9 @@
 import { MapPin, ExternalLink } from 'lucide-react';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const JobCard = ({ job }) => {
+    const navigate = useNavigate();
     return (
         <div className="flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 p-5 transition-all hover:shadow-md active:scale-[0.99] cursor-pointer group">
             {/* Header Section */}
@@ -32,8 +34,8 @@ const JobCard = ({ job }) => {
             {/* Skills Tags */}
             <div className="flex flex-wrap gap-2 mb-5">
                 {job.skillsRequired.map((skill) => (
-                    <span 
-                        key={skill} 
+                    <span
+                        key={skill}
                         className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-semibold border border-blue-100/50"
                     >
                         {skill}
@@ -49,13 +51,10 @@ const JobCard = ({ job }) => {
                         {job.contractAddress}
                     </span>
                 </div>
-                
-                <button 
-                    type='button' 
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        // Action here
-                    }} 
+
+                <button
+                    type='button'
+                    onClick={() => { navigate(`/project/${job._id}`) }}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-10 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/10 flex items-center gap-2"
                 >
                     View Details
