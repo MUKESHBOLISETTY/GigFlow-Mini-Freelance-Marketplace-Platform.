@@ -9,12 +9,18 @@ const limiter = rateLimit({
     standardHeaders: 'draft-8',
     legacyHeaders: false,
 })
+const fetchlimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    limit: 100,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+})
 
 router.post("/", limiter, authenticateUser, createProject);
 
 router.get("/getClientProjects", limiter, authenticateUser, getClientProjects);
 
-router.get("/", limiter, authenticateUser, fetchAllProjects);
+router.get("/", fetchlimiter, authenticateUser, fetchAllProjects);
 
 router.get("/:id", limiter, authenticateUser, getProjectById);
 
