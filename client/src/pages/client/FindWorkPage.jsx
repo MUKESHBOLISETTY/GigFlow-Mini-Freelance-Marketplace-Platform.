@@ -36,15 +36,18 @@ const FindWorkPage = () => {
 
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
-  }, [page, hasMore, jobs_loading, searchQuery]);
+  }, [page, hasMore, jobs_loading]);
 
   useEffect(() => {
-    dispatch(setPage(1))
-    dispatch(setJobs([]))
-    dispatch(setHasMore(true))
-    fetchGigs({ page, searchType: searchQuery });
+    const getData = setTimeout(() => {
+      dispatch(setPage(1))
+      dispatch(setJobs([]))
+      dispatch(setHasMore(true))
+      fetchGigs({ page, searchType: searchQuery });
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 2000)
+    return () => clearTimeout(getData)
   }, [searchQuery]);
   return (
     <div className="bg-slate-50 font-sans text-[#0d141b] min-h-screen flex flex-col">

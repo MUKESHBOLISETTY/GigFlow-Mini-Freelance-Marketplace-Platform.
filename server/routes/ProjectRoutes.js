@@ -5,7 +5,7 @@ import { createProject, fetchAllProjects, getClientProjects, getProjectById } fr
 const router = express.Router();
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 30,
+    limit: 50,
     standardHeaders: 'draft-8',
     legacyHeaders: false,
 })

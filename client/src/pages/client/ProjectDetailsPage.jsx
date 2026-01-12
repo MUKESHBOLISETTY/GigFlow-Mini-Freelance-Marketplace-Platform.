@@ -18,13 +18,13 @@ const ProjectDetailsPage = () => {
     const { id } = useParams();
     const { fetchGigById } = useGigs()
     const dispatch = useDispatch();
+    const { jobs_loading, jobs, page, hasMore, selectedProject } = useSelector((state) => state.jobs);
     useEffect(() => {
         const getData = setTimeout(() => {
             fetchGigById(id);
         }, 500)
         return () => clearTimeout(getData)
     }, [dispatch, id]);
-    const { jobs_loading, jobs, page, hasMore, selectedProject } = useSelector((state) => state.jobs);
 
     return (
         <>
