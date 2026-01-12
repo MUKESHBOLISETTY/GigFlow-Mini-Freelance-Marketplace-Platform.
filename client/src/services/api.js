@@ -39,4 +39,10 @@ export const gigsApi = {
     getProjectById: (id) => api.get(`/gigs/${id}`),
 }
 
+export const bidsApi = {
+   createBid: (data) => api.post('/bids', data),
+   hire: (bidId) => api.patch(`/bids/${bidId}/hire`),
+   getBids: (params) => api.get('/bids', {params}),
+}
+
 export default api; 

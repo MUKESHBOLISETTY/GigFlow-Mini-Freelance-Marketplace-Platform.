@@ -71,11 +71,13 @@ export const useGigs = () => {
         try {
             dispatch(setJobsLoading(true));
             const response = await gigsApi.getProjects(data);
-            dispatch(setHasMore(response.data.hasMore));
-            if (Number(data.page) > 1) {
-                dispatch(appendJobs(response.data.projects));
-            } else {
-                dispatch(setJobs(response.data.projects));
+            if (response.data.message === "projects_received") {
+                dispatch(setHasMore(response.data.hasMore));
+                if (Number(data.page) > 1) {
+                    dispatch(appendJobs(response.data.projects));
+                } else {
+                    dispatch(setJobs(response.data.projects));
+                }
             }
             dispatch(setJobsLoading(false));
             return response;
