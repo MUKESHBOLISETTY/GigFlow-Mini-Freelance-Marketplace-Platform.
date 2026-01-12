@@ -42,9 +42,9 @@ const Header = () => {
                 Find Projects
             </Link>
 
-            {is_logged_in && (
+            {is_logged_in && user && (
                 <Link
-                    to="/profile"
+                    to={user.type === 'Client' ? '/client/profile' : '/profile'}
                     className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 ${mobile ? "w-full" : ""
                         }`}
                     onClick={() => setOpen(false)}

@@ -38,8 +38,8 @@ export const useAuth = () => {
                     console.log(parseddata)
                     dispatch(setLoading(false));
                     if (parseddata?.type == "Client") {
-                        if (!location?.pathname?.startsWith('/')) {
-                            navigate('/');
+                        if (!location?.pathname?.startsWith('/client')) {
+                            navigate('/client');
                         }
                     } else if (location?.pathname?.startsWith('/login') || location?.pathname?.startsWith('/signup')) {
                         if (navigation) {

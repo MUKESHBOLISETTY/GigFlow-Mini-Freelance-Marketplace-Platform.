@@ -114,7 +114,7 @@ export const getProjectsClient = async (req, res) => {
 export const sendProjectsClientUpdater = async (clientId) => {
     for (const client of Clients) {
         try {
-            const updatedProjects = await getClientProjects(clientId);
+            const updatedProjects = await getClientProjects(clientId, true);
             client.write(`event: projects_update\n`);
             client.write(`data: ${JSON.stringify(updatedProjects)}\n\n`);
             console.log(`Sent updated projects data`);

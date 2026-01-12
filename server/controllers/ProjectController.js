@@ -70,7 +70,7 @@ export const getClientProjects = async (clientId, verified = false) => {
             return projects;
         }
     } catch (error) {
-        console.log(err)
+        console.log(error)
     }
 };
 

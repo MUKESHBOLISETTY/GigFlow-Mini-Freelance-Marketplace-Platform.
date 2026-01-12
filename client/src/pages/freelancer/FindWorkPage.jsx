@@ -85,7 +85,7 @@ const FindWorkPage = () => {
 
         <div className="space-y-3 p-4">
           {jobs.map((job) => (
-            <JobCard key={job.id} job={job} />
+            <JobCard key={job.id} job={job} bid={false} />
           ))}
 
           {jobs_loading && (

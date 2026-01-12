@@ -1,7 +1,8 @@
 import express from "express";
 import { rateLimit } from 'express-rate-limit'
 import { authenticateUser } from "../middlewares/AuthMiddleware.js";
-import { createProject, fetchAllProjects, getClientProjects, getProjectById } from "../controllers/ProjectController.js";
+import { createProject, fetchAllProjects,  getProjectById } from "../controllers/ProjectController.js";
+import { getProjectsClient } from "../middlewares/ServerSentUpdates.js";
 const router = express.Router();
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -18,7 +19,7 @@ const fetchlimiter = rateLimit({
 
 router.post("/", limiter, authenticateUser, createProject);
 
-router.get("/getClientProjects", limiter, authenticateUser, getClientProjects);
+router.get("/getClientProjects", limiter, authenticateUser, getProjectsClient);
 
 router.get("/", fetchlimiter, authenticateUser, fetchAllProjects);
 

@@ -5,12 +5,68 @@ import toast from 'react-hot-toast';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCallback } from 'react';
 import { setJobsLoading, setJobs, appendJobs, resetJobs, setPage, setHasMore, setSelectedProject } from '../redux/slices/jobsSlice';
+import { setProjects } from '../redux/slices/projectsSlice';
 
 export const useGigs = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
     const { jobs_loading, jobs, page, hasMore } = useSelector((state) => state.jobs);
+    const { loading, is_logged_in, user, error, email, navigation } = useSelector((state) => state.auth);
+
+    const setupProjectsSSE = useCallback(() => {
+        let eventSource;
+        let reconnectTimeout;
+        if (is_logged_in !== "true") {
+            dispatch(setError("Authentication required for real-time updates."));
+            return;
+        }
+        const connect = () => {
+            eventSource = new EventSource(`${import.meta.env.VITE_API_URL}/gigs/getClientProjects`, { withCredentials: true });
+
+            eventSource.onopen = () => console.log('SSE connection opened.');
+
+            eventSource.addEventListener('initial_data', (event) => {
+                try {
+                    console.log(JSON.parse(event.data))
+                    dispatch(setProjects(JSON.parse(event.data)));
+                } catch (e) {
+                    console.error('Initial data parse error:', e);
+                }
+            });
+
+            eventSource.addEventListener('projects_update', (event) => {
+                try {
+                    dispatch(setProjects(JSON.parse(event.data)));
+                } catch (e) {
+                    console.error('Update parse error:', e);
+                }
+            });
+
+            eventSource.addEventListener('restricted', () => {
+                console.warn('Restricted event — closing SSE.');
+                eventSource.close();
+            });
+
+            eventSource.onerror = () => {
+                console.warn('SSE error — reconnecting in 5s...');
+                eventSource.close();
+                reconnectTimeout = setTimeout(connect, 5000);
+            };
+
+            eventSource.addEventListener('keep-alive', () => {
+                // console.log('Ping event — SSE.');
+            });
+        };
+
+        connect();
+
+        return () => {
+            if (eventSource) eventSource.close();
+            if (reconnectTimeout) clearTimeout(reconnectTimeout);
+        };
+    }, [is_logged_in, dispatch]);
+
     const fetchGigs = async (data) => {
         try {
             dispatch(setJobsLoading(true));
@@ -60,6 +116,7 @@ export const useGigs = () => {
     };
 
     return {
+        setupProjectsSSE,
         fetchGigs,
         fetchGigById,
         createGig
