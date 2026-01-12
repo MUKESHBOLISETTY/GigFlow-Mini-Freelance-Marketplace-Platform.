@@ -1,7 +1,7 @@
 import express from "express";
 import { rateLimit } from 'express-rate-limit'
 import { authenticateUser } from "../middlewares/AuthMiddleware.js";
-import { createProject, getClientProjects, hireFreelancer } from "../controllers/ProjectController.js";
+import { hireFreelancer } from "../controllers/BidController.js";
 const router = express.Router();
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -10,10 +10,6 @@ const limiter = rateLimit({
     legacyHeaders: false,
 })
 
-router.post("/", limiter, authenticateUser, createProject);
-
-router.get("/getClientProjects", limiter, authenticateUser, getClientProjects);
-
-router.patch("/hireFreelancer", limiter, authenticateUser, hireFreelancer);
+router.patch("/:bidId/hire", limiter, authenticateUser, hireFreelancer);
 
 export default router;
