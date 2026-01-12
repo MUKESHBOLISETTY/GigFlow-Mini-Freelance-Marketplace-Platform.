@@ -99,7 +99,7 @@ export const fetchAllProjects = async (req, res) => {
         budgetRange,
         deadlineBefore,
         page = 1,
-        limit = 1
+        limit = 5
     } = req.query;
     const matchStage = {};
     const pageNum = Math.max(1, Number(page));
