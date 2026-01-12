@@ -1,15 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Bell, Mail, Menu, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import { useSelector } from "react-redux";
 
 const Header = () => {
     const [open, setOpen] = useState(false);
     const menuRef = useRef(null);
     const navigate = useNavigate();
-
-    const handleLogout = () => {
+    const { handleLogout } = useAuth()
+    const { loading, is_logged_in, user, error, email, navigation } = useSelector((state) => state.auth);
+    const signOut = async () => {
         setOpen(false);
-        navigate("/login");
+        await handleLogout(navigate)
     };
 
     useEffect(() => {
@@ -29,6 +32,7 @@ const Header = () => {
 
     const NavLinks = ({ mobile = false }) => (
         <nav className={mobile ? "flex flex-col gap-1" : "hidden md:flex items-center gap-2"}>
+
             <Link
                 to="/find-work"
                 className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 ${mobile ? "w-full" : ""
@@ -38,23 +42,47 @@ const Header = () => {
                 Find Projects
             </Link>
 
-            <Link
-                to="/profile"
-                className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 ${mobile ? "w-full" : ""
-                    }`}
-                onClick={() => setOpen(false)}
-            >
-                Profile
-            </Link>
+            {is_logged_in && (
+                <Link
+                    to="/profile"
+                    className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 ${mobile ? "w-full" : ""
+                        }`}
+                    onClick={() => setOpen(false)}
+                >
+                    Profile
+                </Link>
+            )}
 
-            <button
-                type="button"
-                onClick={handleLogout}
-                className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 text-left ${mobile ? "w-full" : ""
-                    }`}
-            >
-                Logout
-            </button>
+            {is_logged_in ? (
+                <button
+                    type="button"
+                    onClick={signOut}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 text-left ${mobile ? "w-full" : ""
+                        }`}
+                >
+                    Logout
+                </button>
+            ) : (
+                <>
+                    <Link
+                        to="/login"
+                        className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 ${mobile ? "w-full" : ""
+                            }`}
+                        onClick={() => setOpen(false)}
+                    >
+                        Login
+                    </Link>
+
+                    <Link
+                        to="/signup"
+                        className={`px-3 py-2 rounded-lg text-sm font-medium text-white hover:bg-blue-600 bg-blue-500 ${mobile ? "w-full text-center" : ""
+                            }`}
+                        onClick={() => setOpen(false)}
+                    >
+                        Sign Up
+                    </Link>
+                </>
+            )}
         </nav>
     );
 
@@ -69,7 +97,7 @@ const Header = () => {
                         }}
                     />
                     <h2 className="text-white text-lg font-bold leading-tight tracking-tight">
-                        Find Work
+                        GigFlow
                     </h2>
                 </div>
 

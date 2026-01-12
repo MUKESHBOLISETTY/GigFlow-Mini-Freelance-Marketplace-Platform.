@@ -4,11 +4,12 @@ import {
   SlidersHorizontal,
   ChevronDown
 } from 'lucide-react';
-import Header from '../../components/client/Header';
+import Header from '../../components/reusable/Header';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHasMore, setJobs, setPage } from '../../redux/slices/jobsSlice';
 import JobCard from '../../components/reusable/JobCard';
 import useGigs from '../../hooks/useGigs';
+import CreateProjectModal from '../../components/client/CreateProjectModal';
 
 const FindWorkPage = () => {
   const dispatch = useDispatch()
@@ -46,7 +47,7 @@ const FindWorkPage = () => {
       fetchGigs({ page, searchType: searchQuery });
 
       window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 2000)
+    }, 1000)
     return () => clearTimeout(getData)
   }, [searchQuery]);
   return (

@@ -8,9 +8,11 @@ import {
     setUser,
     setError,
     setEmail,
-    resetAuth
+    resetAuth,
+    setLoginStatus
 } from '../redux/slices/authSlice';
 import { useCallback } from 'react';
+import Cookies from 'js-cookie';
 
 export const useAuth = () => {
     const dispatch = useDispatch();
@@ -140,7 +142,7 @@ export const useAuth = () => {
 
     const handleLogout = async (navigate) => {
         try {
-            localStorage.removeItem("token");
+            Cookies.set("is_logged_in", false);
             localStorage.removeItem("email");
             dispatch(resetAuth());
             navigate('/')
@@ -163,6 +165,7 @@ export const useAuth = () => {
             if (response.data.message == "userlogin") {
                 localStorage.setItem("email", response.data.UserSchema);
                 dispatch(setEmail(response.data.UserSchema));
+                dispatch(setLoginStatus(true));
                 if (navigation) {
                     navigate(navigation)
                 }

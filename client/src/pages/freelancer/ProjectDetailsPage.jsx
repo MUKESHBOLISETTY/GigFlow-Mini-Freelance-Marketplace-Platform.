@@ -9,7 +9,7 @@ import {
     UploadCloud,
     Send
 } from 'lucide-react';
-import Header from '../../components/client/Header';
+import Header from '../../components/reusable/Header';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useGigs from '../../hooks/useGigs';

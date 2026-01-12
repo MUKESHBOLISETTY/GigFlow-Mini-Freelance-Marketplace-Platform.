@@ -44,10 +44,25 @@ export const useGigs = () => {
         }
     };
 
+    const createGig = async (data) => {
+        try {
+            dispatch(setJobsLoading(true));
+            const response = await gigsApi.createGig(data);
+            if (response.data.message === "project_posted") {
+                toast.success("Project Added Successfully")
+            }
+            dispatch(setJobsLoading(false));
+            return response;
+        } catch (error) {
+            dispatch(setJobsLoading(false));
+            throw error;
+        }
+    };
 
     return {
         fetchGigs,
-        fetchGigById
+        fetchGigById,
+        createGig
     };
 };
 

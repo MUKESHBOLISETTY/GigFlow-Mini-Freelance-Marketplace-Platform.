@@ -28,7 +28,7 @@ export const createProject = async (req, res) => {
             return respond(res, "Fill All Fields.", 400, false);
         }
 
-        const [day, month, year] = deadline.split('/');
+        const [year, month, day] = deadline.split('-');
         const formattedDeadline = new Date(`${year}-${month}-${day}`);
         const newProject = new Project({
             title,

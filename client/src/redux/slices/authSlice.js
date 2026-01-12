@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 const initialState = {
   loading: false,
   email: localStorage.getItem("email") ? localStorage.getItem("email") : null,
-  is_logged_in: Cookies.get('is_logged_in') ? Cookies.get('is_logged_in') : null,
+  is_logged_in: Cookies.get('is_logged_in') == "true" ? Cookies.get('is_logged_in') : false,
   user: null,
   error: null,
   navigation: null
@@ -15,6 +15,9 @@ const authSlice = createSlice({
   reducers: {
     setUser(state, value) {
       state.user = value.payload;
+    },
+    setLoginStatus(state, value) {
+      state.is_logged_in = value.payload;
     },
     setNavigation(state, value) {
       state.navigation = value.payload;
@@ -30,12 +33,13 @@ const authSlice = createSlice({
       state.loading = false;
     },
     resetAuth: (state) => {
+      state.is_logged_in = false;
       state.email = null;
       state.user = null;
     }
   },
 });
 
-export const { setLoading, setEmail, setUser, setError, resetAuth, setNavigation } = authSlice.actions;
+export const { setLoading, setLoginStatus, setEmail, setUser, setError, resetAuth, setNavigation } = authSlice.actions;
 
 export default authSlice.reducer;

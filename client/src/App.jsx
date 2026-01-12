@@ -8,9 +8,10 @@ import { useEffect } from 'react';
 import SignUp from './pages/auth/SignUp';
 import Login from './pages/auth/Login';
 import Cookies from 'js-cookie';
-import FindWorkPage from './pages/client/FindWorkPage';
-import ProjectDetailsPage from './pages/client/ProjectDetailsPage';
+import FindWorkPage from './pages/freelancer/FindWorkPage';
+import ProjectDetailsPage from './pages/freelancer/ProjectDetailsPage';
 import NotFoundPage from './pages/NotFoundPage';
+import Profile from './components/reusable/Profile';
 
 function App() {
   const { loading, is_logged_in, user, error, email } = useSelector((state) => state.auth);
@@ -33,12 +34,20 @@ function AppContent() {
     <>
       <Toaster />
       <Routes>
-
-        <Route path='/' element={<FindWorkPage />} />
-        <Route path='/find-work' element={<FindWorkPage />} />
+        {/* AUTHENTICATION */}
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<SignUp />} />
+
+        {/* USER PAGES */}
+        <Route path='/' element={<FindWorkPage />} />
+        <Route path='/find-work' element={<FindWorkPage />} />
         <Route path='/project/:id' element={<ProjectDetailsPage />} />
+
+        {/* COMMON PAGES */}
+        <Route path='/profile' element={<Profile />} />
+
+
+        {/* NOT FOUND PAGE */}
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </>
