@@ -2,6 +2,54 @@ import mongoose from "mongoose";
 import { Project } from "../models/Project.js";
 import { Bid } from "../models/Bid.js";
 import { respond } from "../utils/respond.js";
+import { Freelancer } from "../models/Freelancer.js";
+
+export const createBid = async (req, res) => {
+    if (req?.user.type !== "Freelancer") {
+        return respond(res, "Access denied.", 403, false);
+    }
+    try {
+        const freelancerId = req?.user._id;
+        const { projectId, proposalText, bidAmount } = req.body;
+
+        if (!projectId || !mongoose.Types.ObjectId.isValid(projectId)) {
+            return respond(res, "Invalid or missing projectId.", 400, false);
+        }
+
+        if (!proposalText || typeof proposalText !== "string" || !proposalText.trim()) {
+            return respond(res, "proposalText is required.", 400, false);
+        }
+
+        const amount = Number(bidAmount);
+        if (!Number.isFinite(amount) || amount <= 0) {
+            return respond(res, "bidAmount must be a positive number.", 400, false);
+        }
+        const project = await Project.findById(projectId).select("status clientId");
+        if (!project) {
+            return respond(res, "Project not found.", 404, false);
+        }
+        if (project.status !== "open") {
+            return respond(res, "Bidding is closed for this project.", 400, false);
+        }
+        const alreadyBid = await Bid.findOne({ projectId, freelancerId }).select("_id");
+        if (alreadyBid) {
+            return respond(res, "You have already placed a bid on this project.", 409, false);
+        }
+        const bid = await Bid.create({
+            projectId,
+            freelancerId,
+            proposalText: proposalText.trim(),
+            bidAmount: amount,
+            status: "pending",
+        });
+        await Freelancer.findByIdAndUpdate(req.user._id, {
+            $push: { bids: bid._id },
+        });
+        return respond(res, "bid_registered", 200, true);
+    } catch (err) {
+        return respond(res, "Error Occured.", 400, false);
+    }
+}
 
 export const hireFreelancer = async (req, res) => {
     if (req?.user.type !== "Client") {
