@@ -14,6 +14,6 @@ router.post("/", limiter, authenticateUser, createProject);
 
 router.get("/getClientProjects", limiter, authenticateUser, getClientProjects);
 
-router.get("/", limiter, authenticateUser, fetchAllProjects);
+router.get("/", authenticateUser, fetchAllProjects);
 
 export default router;

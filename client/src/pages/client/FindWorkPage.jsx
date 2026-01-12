@@ -27,18 +27,12 @@ const FindWorkPage = () => {
         const first = entries[0];
         if (!first.isIntersecting) return;
         if (!hasMore || jobs_loading) return;
-        if (isFetchingRef.current) return;
-
-        isFetchingRef.current = true;
 
         const nextPage = page + 1;
 
         dispatch(setPage(nextPage));
 
-        fetchGigs({ searchQuery, page: nextPage })
-          .finally(() => {
-            isFetchingRef.current = false;
-          });
+        fetchGigs({ searchType: searchQuery, page: nextPage })
       },
       { root: null, rootMargin: "200px", threshold: 0 }
     );
@@ -48,25 +42,25 @@ const FindWorkPage = () => {
   }, [page, hasMore, jobs_loading, searchQuery]);
 
   useEffect(() => {
-    setPage(1);
-    setHasMore(true);
-    setJobs([]);
-    fetchGigs({ page });
+    dispatch(setPage(1))
+    dispatch(setJobs([]))
+    dispatch(setHasMore(true))
+    fetchGigs({ page, searchType: searchQuery });
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [searchQuery]);
   return (
-    <div className="bg-slate-50 dark:bg-[#101922] font-sans text-[#0d141b] dark:text-slate-100 min-h-screen flex flex-col">
+    <div className="bg-slate-50 font-sans text-[#0d141b] min-h-screen flex flex-col">
       <Header />
 
       <main className="flex-1 w-full mx-auto pb-24">
-        <div className="px-4 py-3 bg-white dark:bg-[#1a2632]">
-          <div className="flex h-12 w-full max-w-lg flex-1 items-stretch rounded-xl shadow-sm bg-[#f0f2f5] dark:bg-[#2a3a4a]">
+        <div className="px-4 py-3 bg-white">
+          <div className="flex h-12 w-full max-w-lg flex-1 items-stretch rounded-xl shadow-sm bg-[#f0f2f5]">
             <div className="text-[#4c739a] flex items-center justify-center pl-4">
               <Search size={20} />
             </div>
             <input
-              className="flex w-full min-w-0 flex-1 rounded-r-xl text-[#0d141b] dark:text-white focus:outline-none border-none bg-transparent h-full placeholder:text-[#4c739a] px-4 pl-2 text-base font-normal"
+              className="flex w-full min-w-0 flex-1 rounded-r-xl text-[#0d141b] focus:outline-none border-none bg-transparent h-full placeholder:text-[#4c739a] px-4 pl-2 text-base font-normal"
               placeholder="Search for projects..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -74,7 +68,7 @@ const FindWorkPage = () => {
           </div>
         </div>
 
-        <div className="flex gap-2 p-4 overflow-x-auto bg-white dark:bg-[#1a2632] scrollbar-hide">
+        <div className="flex gap-2 p-4 overflow-x-auto bg-white scrollbar-hide">
           <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#137fec] text-white px-4 shadow-sm">
             <span className="text-sm font-semibold">Filter</span>
             <SlidersHorizontal size={16} />
@@ -85,8 +79,7 @@ const FindWorkPage = () => {
         </div>
 
         <div className="flex items-center justify-between px-4 pt-6 pb-2">
-          <h3 className="text-[#0d141b] dark:text-white text-lg font-bold leading-tight tracking-tight">Recent Projects</h3>
-          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">1,248 Results</span>
+          <h3 className="text-[#0d141b] text-lg font-bold leading-tight tracking-tight">Recent Projects</h3>
         </div>
 
         <div className="space-y-3 p-4">
@@ -110,8 +103,8 @@ const FindWorkPage = () => {
 };
 
 const FilterButton = ({ label }) => (
-  <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f5] dark:bg-[#2a3a4a] px-4">
-    <span className="text-[#0d141b] dark:text-slate-200 text-sm font-medium">{label}</span>
+  <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f5] px-4">
+    <span className="text-[#0d141b] text-sm font-medium">{label}</span>
     <ChevronDown size={16} className="text-slate-400" />
   </button>
 );
