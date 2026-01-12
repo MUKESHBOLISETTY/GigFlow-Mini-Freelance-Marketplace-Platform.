@@ -36,7 +36,7 @@ const FindWorkPage = () => {
 
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
-  }, [page, hasMore, jobs_loading]);
+  }, [page, hasMore]);
 
   useEffect(() => {
     const getData = setTimeout(() => {

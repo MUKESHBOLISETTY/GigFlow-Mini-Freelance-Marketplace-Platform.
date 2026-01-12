@@ -52,7 +52,7 @@ const FreelancerSchema = new mongoose.Schema(
             default: false,
         },
         additionalDetails: {
-            title: { type: String, required: true },
+            title: { type: String },
             bio: String,
             skills: [{ type: String, index: true }],
             totalEarnings: { type: Number, default: 0 }

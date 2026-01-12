@@ -465,3 +465,19 @@ export const getUserData = async (email) => {
         console.log(err)
     }
 }
+
+export const getUserById = async (req, res) => {
+    try {
+        const { freelancerId } = req.params;
+        if (req?.user.type !== "Client") {
+            return respond(res, "Access denied.", 403, false);
+        }
+        const user = await Freelancer.findOne({ _id: freelancerId }).select("username email phoneNumber gender verified additionalDetails portfolio").lean();
+        if (user?.verified !== true || !user) {
+            return respond(res, "User Not Found.", 403, false);
+        }
+        return respond(res, "user_found", 200, true, user);
+    } catch (err) {
+        return respond(res, "Error Occured", 500, false);
+    }
+}
