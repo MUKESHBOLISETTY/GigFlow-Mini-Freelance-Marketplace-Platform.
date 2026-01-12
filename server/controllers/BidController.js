@@ -51,6 +51,89 @@ export const createBid = async (req, res) => {
     }
 }
 
+export const fetchBids = async (req, res) => {
+    const { gigId, searchType,
+        page = 1,
+        limit = 5
+    } = req.query;
+    if (!gigId) {
+        return respond(res, "Invalid gigId.", 400, false);
+    }
+    if (req?.user.type !== "Client") {
+        return respond(res, "Access denied.", 403, false);
+    }
+    const ownerCheck = await Project.findOne({ _id: gigId }).select("clientId");
+    if (!ownerCheck) {
+        return respond(res, "Invalid gigId.", 400, false);
+    }
+    if (!ownerCheck.clientId?.equals(req.user._id)) {
+        return respond(res, "Only gig owner can fetch.", 400, false);
+    }
+    const matchStage = {};
+    const pageNum = Math.max(1, Number(page));
+    const limitNum = Math.max(1, Number(limit));
+    try {
+        if (!mongoose.Types.ObjectId.isValid(gigId)) {
+            return respond(res, "Invalid gigId.", 400, false);
+        }
+        matchStage.projectId = new mongoose.Types.ObjectId(gigId);
+
+        if (searchType) {
+            matchStage.$or = [
+                { "freelancer.username": { $regex: searchType, $options: "i" } },
+                { "freelancer.email": { $regex: searchType, $options: "i" } }
+            ];
+        }
+
+        const total = await Bid.countDocuments(matchStage);
+
+        const pipeline = [
+            { $match: matchStage },
+            {
+                $lookup: {
+                    from: "freelancers",
+                    localField: "freelancerId",
+                    foreignField: "_id",
+                    as: "freelancer"
+                }
+            },
+            { $unwind: { path: "$freelancer", preserveNullAndEmptyArrays: true } },
+
+            {
+                $sort: {
+                    createdAt: -1
+                }
+            },
+            { $skip: (pageNum - 1) * limitNum },
+            { $limit: limitNum },
+            {
+                $project: {
+                    proposalText: 1,
+                    bidAmount: 1,
+                    status: 1,
+                    createdAt: 1,
+                    freelancer: {
+                        _id: 1,
+                        username: 1,
+                        email: 1
+                    }
+                }
+            }
+        ];
+        const bids = await Bid.aggregate(pipeline);
+        const hasMore = pageNum * limitNum < total;
+        res.json({
+            message: "bids_received",
+            page,
+            limit,
+            hasMore,
+            bids,
+        });
+    } catch (error) {
+        return respond(res, "Error Occured", 500, false);
+    }
+};
+
 export const hireFreelancer = async (req, res) => {
     if (req?.user.type !== "Client") {
         return respond(res, "Access denied.", 403, false);
