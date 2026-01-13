@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
@@ -58,7 +58,7 @@ const FreelancerRoute = () => {
 
 function App() {
   const { loading, is_logged_in, user, error, email } = useSelector((state) => state.auth);
-
+  const socketRef = useRef(null);
   const { setupUserSSE } = useAuth();
   const { setupProjectsSSE } = useGigs();
   useEffect(() => {
@@ -72,26 +72,51 @@ function App() {
     }
   }, [is_logged_in, setupProjectsSSE]);
 
-  const userId = user?._id;
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_SOCKET_URL, {
-      withCredentials: true,
-    });
+    if (!is_logged_in || !user) {
+      if (socketRef.current) {
+        socketRef.current.removeAllListeners();
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+      return;
+    }
+    if (!socketRef.current) {
+      socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
+        withCredentials: true,
+        transports: ["websocket"],
+        autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: 5,
+      });
+    }
 
-    if (!userId) return;
-    socket.on('connect', () => {
-      console.log("Connected to WebSocket:", socket.id);
-      socket.emit('join', userId);
-    });
+    const socket = socketRef.current;
 
-    socket.on('notification', (data) => {
-      toast.success(data.message, { duration: 3000, position: 'bottom-right' });
-    });
+    const onConnect = () => {
+      console.log("Connected:", socket.id);
+      socket.emit("join", user._id);
+    };
+
+    const onNotification = (data) => {
+      toast.success(data?.message || "New notification", {
+        duration: 3000,
+        position: "bottom-right",
+        id: data?.id || data?.message,
+      });
+    };
+
+    socket.off("connect", onConnect);
+    socket.off("notification", onNotification);
+
+    socket.on("connect", onConnect);
+    socket.on("notification", onNotification);
 
     return () => {
-      socket.disconnect();
+      socket.off("connect", onConnect);
+      socket.off("notification", onNotification);
     };
-  }, [userId]);
+  }, [is_logged_in, user?._id]);
 
   return (
     <AppContent />
