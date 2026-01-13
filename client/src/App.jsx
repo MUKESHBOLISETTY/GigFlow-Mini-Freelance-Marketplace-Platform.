@@ -70,7 +70,7 @@ function App() {
         cleanupProjects();
       };
     }
-  }, [is_logged_in, setupUserSSE, setupProjectsSSE]);
+  }, [is_logged_in, setupProjectsSSE]);
   return (
     <AppContent />
   );

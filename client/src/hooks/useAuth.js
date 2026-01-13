@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { authApi } from '../services/api';
+import { authApi, notificationsApi } from '../services/api';
 import toast from 'react-hot-toast';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -13,12 +13,17 @@ import {
 } from '../redux/slices/authSlice';
 import { useCallback } from 'react';
 import Cookies from 'js-cookie';
+import { useRef } from 'react';
 
 export const useAuth = () => {
     const dispatch = useDispatch();
     const { loading, is_logged_in, user, error, email, navigation } = useSelector((state) => state.auth);
     const navigate = useNavigate();
     const location = useLocation();
+    const locationRef = useRef(location.pathname);
+    useEffect(() => {
+        locationRef.current = location.pathname;
+    }, [location.pathname]);
     const setupUserSSE = useCallback(() => {
         let eventSource;
         let reconnectTimeout;
@@ -36,15 +41,16 @@ export const useAuth = () => {
                     const parseddata = JSON.parse(event.data);
                     dispatch(setUser(parseddata));
                     dispatch(setLoading(false));
+                    const currentPath = locationRef.current;
                     if (parseddata?.type == "Client") {
-                        if (!location?.pathname?.startsWith('/client')) {
+                        if (!currentPath.startsWith('/client')) {
                             navigate('/client');
                         }
                     } else if (parseddata?.type == "Freelancer") {
-                        if (!location?.pathname?.startsWith('/freelancer')) {
+                        if (!currentPath.startsWith('/freelancer')) {
                             navigate('/freelancer');
                         }
-                    } else if (location?.pathname?.startsWith('/login') || location?.pathname?.startsWith('/signup')) {
+                    } else if (currentPath.startsWith('/login') || currentPath.startsWith('/signup')) {
                         if (navigation) {
                             navigate(navigation);
                         } else {
@@ -229,6 +235,25 @@ export const useAuth = () => {
         }
     };
 
+    const updateNotification = async (data) => {
+        try {
+            dispatch(setLoading(true));
+            const response = await notificationsApi.markAsRead(data);
+            if (response.data.message === "notification_updated") {
+                toast.success('Notification marked as read', {
+                    duration: 2000,
+                    position: 'bottom-right',
+                });
+            }
+            dispatch(setLoading(false));
+            return response;
+        } catch (error) {
+            dispatch(setLoading(false));
+            dispatch(setError(error.message));
+            throw error;
+        }
+    };
+
     return {
         signUp,
         handleLogout,
@@ -238,7 +263,8 @@ export const useAuth = () => {
         sendForgotPassword,
         verifyForgotPasswordOtp,
         resetPassword,
-        setupUserSSE
+        setupUserSSE,
+        updateNotification
     };
 };
 

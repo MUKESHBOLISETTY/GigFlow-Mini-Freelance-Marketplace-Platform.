@@ -6,7 +6,8 @@ const initialState = {
   is_logged_in: localStorage.getItem("is_logged_in") ? localStorage.getItem("is_logged_in") : null,
   user: null,
   error: null,
-  navigation: null
+  navigation: null,
+  noficcations: [],
 };
 
 const authSlice = createSlice({

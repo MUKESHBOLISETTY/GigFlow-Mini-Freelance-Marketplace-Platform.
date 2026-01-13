@@ -40,6 +40,10 @@ export const gigsApi = {
     getProjectById: (id) => api.get(`/gigs/${id}`),
 }
 
+export const notificationsApi = {
+    markAsRead: (data) => api.post('/auth/markNotification', data),
+}
+
 export const bidsApi = {
     createBid: (data) => api.post('/bids', data),
     hire: (bidId, projectId) => api.patch(`/bids/${bidId}/${projectId}/hire`),

@@ -12,6 +12,7 @@ import { Client } from '../models/Client.js';
 import mailSender from '../utils/mailSender.js';
 import { forgototpTemplate } from '../mail/forgotVerificationTemplate.js';
 import { otpTemplate } from '../mail/emailVerificationTemplate.js';
+import { sendUserUpdater } from '../middlewares/ServerSentUpdates.js';
 const tokenGenerator = async (email, sessionId) => {
     const payload = {
         email,
@@ -498,6 +499,7 @@ export const markNotificationAsRead = async (req, res) => {
         if (!user) {
             return respond(res, "User or Notification Not Found.", 404, false);
         }
+        await sendUserUpdater(userId);
         return respond(res, "notification_updated", 200, true);
     } catch (err) {
         return respond(res, "Error Occured", 500, false);

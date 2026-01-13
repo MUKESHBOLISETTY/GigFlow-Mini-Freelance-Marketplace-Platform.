@@ -3,6 +3,7 @@ import { Project } from "../models/Project.js";
 import { Bid } from "../models/Bid.js";
 import { respond } from "../utils/respond.js";
 import { Freelancer } from "../models/Freelancer.js";
+import { sendUserUpdater } from "../middlewares/ServerSentUpdates.js";
 
 export const createBid = async (req, res) => {
     if (req?.user.type !== "Freelancer") {
@@ -183,7 +184,7 @@ export const hireFreelancer = async (req, res) => {
             $push: { portfolio: project._id },
             $push: { notifications: [{ message: `You were hired for ${project.title}`, read: false }] }
         }, { new: true });
-
+        await sendUserUpdater(hiredBid.freelancerId);
         await session.commitTransaction();
 
         return respond(res, "freelancer_hired", 200, true);
