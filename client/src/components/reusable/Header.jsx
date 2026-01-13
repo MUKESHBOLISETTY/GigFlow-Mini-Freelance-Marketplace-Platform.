@@ -32,15 +32,26 @@ const Header = () => {
 
     const NavLinks = ({ mobile = false }) => (
         <nav className={mobile ? "flex flex-col gap-1" : "hidden md:flex items-center gap-2"}>
-
-            <Link
-                to="/find-work"
-                className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 ${mobile ? "w-full" : ""
-                    }`}
-                onClick={() => setOpen(false)}
-            >
-                Find Projects
-            </Link>
+            {is_logged_in && user?.type == "Client" && (
+                <Link
+                    to="/client/projects"
+                    className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 ${mobile ? "w-full" : ""
+                        }`}
+                    onClick={() => setOpen(false)}
+                >
+                    Projects
+                </Link>
+            )}
+            {user?.type === "Freelancer" && (
+                <Link
+                    to="/find-work"
+                    className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 ${mobile ? "w-full" : ""
+                        }`}
+                    onClick={() => setOpen(false)}
+                >
+                    Find Projects
+                </Link>
+            )}
 
             {is_logged_in && user && (
                 <Link

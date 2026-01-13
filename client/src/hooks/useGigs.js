@@ -28,7 +28,6 @@ export const useGigs = () => {
 
             eventSource.addEventListener('initial_data', (event) => {
                 try {
-                    console.log(JSON.parse(event.data))
                     dispatch(setProjects(JSON.parse(event.data)));
                 } catch (e) {
                     console.error('Initial data parse error:', e);
