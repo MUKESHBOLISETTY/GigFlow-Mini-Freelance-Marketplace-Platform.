@@ -20,7 +20,13 @@ const ProjectSchema = new mongoose.Schema(
             default: 'open'
         },
         contractAddress: { type: String, required: true },
-        deadline: Date
+        deadline: Date,
+        bids: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Bid",
+            }
+        ]
     },
     {
         timestamps: true,

@@ -80,7 +80,16 @@ export const getProjectById = async (req, res) => {
         if (!id) {
             return respond(res, "Project Not Found", 400, false);
         }
-        const project = await Project.findOne({ _id: id }).populate({ path: 'clientId' });
+        let populateOptions = [
+            { path: "clientId" },
+        ];
+        if (req.user.type === "Client") {
+            populateOptions.push({
+                path: "bids",
+                populate: { path: "freelancerId", select: "username email additionalDetails" }
+            });
+        }
+        const project = await Project.findOne({ _id: id }).populate(populateOptions);
         if (!project) {
             return respond(res, "Project Not Found", 400, false);
         }

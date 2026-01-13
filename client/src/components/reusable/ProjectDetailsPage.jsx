@@ -9,7 +9,7 @@ import {
     UploadCloud,
     Send
 } from 'lucide-react';
-import Header from '../../components/reusable/Header';
+import Header from './Header';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useGigs from '../../hooks/useGigs';
@@ -18,6 +18,8 @@ const ProjectDetailsPage = () => {
     const { id } = useParams();
     const { fetchGigById } = useGigs()
     const dispatch = useDispatch();
+    const { loading, is_logged_in, user, error, email, navigation } = useSelector((state) => state.auth);
+
     const { jobs_loading, jobs, page, hasMore, selectedProject } = useSelector((state) => state.jobs);
     useEffect(() => {
         const getData = setTimeout(() => {
@@ -120,15 +122,70 @@ const ProjectDetailsPage = () => {
                                     </div>
                                 </div>
                             </section>
+
                         </main>
-                        <div className="flex justify-center bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-slate-100 mx-auto">
-                            <button
-                                type='button' className="sm:w-1/2 w-full flex items-center justify-center gap-3 bg-[#137fec] text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/20 hover:bg-blue-600 active:scale-[0.98] transition-all"
-                            >
-                                <span className="text-lg">Submit Proposal</span>
-                                <Send size={20} />
-                            </button>
-                        </div>
+                        {/* {user && user?.type == "Client" && (
+                            <div className="flex justify-center bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-slate-100 mx-auto">
+                                <button
+                                    type='button' className="sm:w-1/2 w-full flex items-center justify-center gap-3 bg-[#137fec] text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/20 hover:bg-blue-600 active:scale-[0.98] transition-all"
+                                >
+                                    <span className="text-lg">Submit Proposal</span>
+                                    <Send size={20} />
+                                </button>
+                            </div>
+                        )} */}
+                        {user?.type === "Client" &&
+                            selectedProject?.bids?.map((bid) => (
+                                <section className="bg-white mt-2 p-5 sm:px-10 border-y border-slate-100">
+                                    <div key={bid._id} className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow p-6">
+                                        <div className="flex flex-col md:flex-row gap-6">
+                                            <div className="flex-1">
+                                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
+                                                    <div>
+                                                        <h4 className="text-xl font-bold text-slate-900 hover:text-primary cursor-pointer transition-colors">{bid.freelancerId.username}</h4>
+                                                    </div>
+                                                    <div className="bg-slate-50  rounded-xl px-6 py-3 flex gap-8">
+                                                        <div className="text-center">
+                                                            <p className="text-primary text-xl font-bold">{bid.bidAmount}</p>
+                                                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Bid Amount</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="mb-6">
+                                                    <p className="text-slate-600  leading-relaxed mb-3">
+                                                        {bid.proposalText}
+                                                    </p>
+                                                </div>
+
+                                                <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-100 ">
+                                                    <div className="flex gap-2 overflow-auto">
+                                                        {bid.freelancerId.additionalDetails.skills.map(tag => (
+                                                            <span key={tag} className="px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-600">
+                                                                {tag}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                    <div className="flex items-center gap-3">
+                                                        <button className="px-5 py-2.5 bg-white  text-slate-700  border border-slate-200  font-bold rounded-lg text-sm hover:bg-slate-50 transition-colors">View Profile</button>
+                                                        <button className="px-8 py-2.5 bg-primary text-white font-bold rounded-lg text-sm shadow-md shadow-primary/20 hover:bg-blue-600 hover:scale-[1.02] active:scale-95 transition-all">Hire Now</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            ))}
+                        {user?.type !== "Client" && (
+                            <div className="flex justify-center bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-slate-100 mx-auto">
+                                <button
+                                    type='button' className="sm:w-1/2 w-full flex items-center justify-center gap-3 bg-[#137fec] text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/20 hover:bg-blue-600 active:scale-[0.98] transition-all"
+                                >
+                                    <span className="text-lg">Submit Proposal</span>
+                                    <Send size={20} />
+                                </button>
+                            </div>
+                        )}
                     </>
                 )}
             </div>

@@ -42,6 +42,9 @@ export const createBid = async (req, res) => {
             bidAmount: amount,
             status: "pending",
         });
+        await Project.findByIdAndUpdate(project._id, {
+            $push: { bids: bid._id },
+        });
         await Freelancer.findByIdAndUpdate(req.user._id, {
             $push: { bids: bid._id },
         });

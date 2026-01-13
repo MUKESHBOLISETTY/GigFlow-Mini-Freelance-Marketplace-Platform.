@@ -15,7 +15,6 @@ import { useSelector } from 'react-redux';
 
 const Profile = () => {
   const { loading, is_logged_in, user, error, email, navigation } = useSelector((state) => state.auth);
-  console.log(user)
 
   const skills = [
     "React.js", "Node.js", "TypeScript", "AWS Architecture",

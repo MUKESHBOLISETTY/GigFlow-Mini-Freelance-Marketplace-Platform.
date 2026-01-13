@@ -9,11 +9,11 @@ import SignUp from './pages/auth/SignUp';
 import Login from './pages/auth/Login';
 import Cookies from 'js-cookie';
 import FindWorkPage from './pages/freelancer/FindWorkPage';
-import ProjectDetailsPage from './pages/freelancer/ProjectDetailsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import Profile from './components/reusable/Profile';
 import ManageProjects from './pages/client/ManageProject';
 import useGigs from './hooks/useGigs';
+import ProjectDetailsPage from './components/reusable/ProjectDetailsPage';
 
 const ClientRoute = () => {
   const { user, loading } = useSelector((state) => state.auth);
@@ -73,6 +73,7 @@ function AppContent() {
           <Route index element={<ManageProjects />} />
           <Route path='projects' element={<ManageProjects />} />
           <Route path='profile' element={<Profile />} />
+          <Route path='project/:id' element={<ProjectDetailsPage />} />
         </Route>
 
         {/* COMMON PAGES */}
