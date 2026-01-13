@@ -8,9 +8,12 @@ import {
 } from 'lucide-react';
 import useGigs from '../../hooks/useGigs';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 
 const CreateProjectModal = ({ isOpen, onClose }) => {
     const { createGig } = useGigs();
+    const { projects_loading, projects, page, hasMore } = useSelector((state) => state.projects);
+
     const [skillInput, setSkillInput] = useState('');
     const [formData, setFormData] = useState({
         title: '',
@@ -195,6 +198,7 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
                         </button>
                         <button
                             type="submit"
+                            disabled={projects_loading}
                             className="flex-[2] h-12 rounded-2xl bg-blue-600 text-white font-bold shadow-xl shadow-blue-500/20 hover:bg-blue-700 active:scale-95 transition-all"
                         >
                             Post Project
