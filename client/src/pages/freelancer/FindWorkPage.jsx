@@ -85,8 +85,14 @@ const FindWorkPage = () => {
 
         <div className="space-y-3 p-4">
           {jobs.map((job) => (
-            <JobCard key={job.id} job={job} bid={false} />
+            <JobCard key={job._id} job={job} bid={false} />
           ))}
+
+          {jobs.lenght === 0 && (
+            <div className="py-4 text-center text-sm text-slate-500">
+              No Projects Found...
+            </div>
+          )}
 
           {jobs_loading && (
             <div className="py-4 text-center text-sm text-slate-500">
