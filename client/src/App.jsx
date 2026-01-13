@@ -35,6 +35,26 @@ const ClientRoute = () => {
   return <Outlet />;
 };
 
+const FreelancerRoute = () => {
+  const { user, loading } = useSelector((state) => state.auth);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen">
+      <p>Loading...</p>
+    </div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.type !== "Freelancer") {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />;
+};
+
 function App() {
   const { loading, is_logged_in, user, error, email } = useSelector((state) => state.auth);
 
@@ -63,11 +83,16 @@ function AppContent() {
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<SignUp />} />
 
-        {/* FREELANCER PAGES */}
         <Route path='/' element={<LandingPage />} />
         <Route path='/find-work' element={<FindWorkPage />} />
-        <Route path='/project/:id' element={<ProjectDetailsPage />} />
 
+        {/* FREELANCER PAGES */}
+        <Route path="/freelancer" element={<FreelancerRoute />}>
+          <Route index element={<FindWorkPage />} />
+          <Route path='find-work' element={<FindWorkPage />} />
+          <Route path='profile' element={<Profile />} />
+          <Route path='project/:id' element={<ProjectDetailsPage />} />
+        </Route>
         {/* CLIENT PAGES */}
         <Route path="/client" element={<ClientRoute />}>
           <Route index element={<ManageProjects />} />
@@ -75,9 +100,6 @@ function AppContent() {
           <Route path='profile' element={<Profile />} />
           <Route path='project/:id' element={<ProjectDetailsPage />} />
         </Route>
-
-        {/* COMMON PAGES */}
-        <Route path='/profile' element={<Profile />} />
 
         {/* NOT FOUND PAGE */}
         <Route path='*' element={<NotFoundPage />} />

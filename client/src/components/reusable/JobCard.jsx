@@ -49,7 +49,7 @@ const JobCard = ({ job, bid }) => {
                 {!bid && (
                     <button
                         type='button'
-                        onClick={() => { navigate(`/project/${job._id}`) }}
+                        onClick={() => { navigate(`/freelancer/project/${job._id}`) }}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-10 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/10 flex items-center gap-2"
                     >
                         View Details

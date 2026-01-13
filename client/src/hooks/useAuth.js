@@ -35,11 +35,14 @@ export const useAuth = () => {
                     dispatch(setLoading(true));
                     const parseddata = JSON.parse(event.data);
                     dispatch(setUser(parseddata));
-                    console.log(parseddata)
                     dispatch(setLoading(false));
                     if (parseddata?.type == "Client") {
                         if (!location?.pathname?.startsWith('/client')) {
                             navigate('/client');
+                        }
+                    } else if (parseddata?.type == "Freelancer") {
+                        if (!location?.pathname?.startsWith('/freelancer')) {
+                            navigate('/freelancer');
                         }
                     } else if (location?.pathname?.startsWith('/login') || location?.pathname?.startsWith('/signup')) {
                         if (navigation) {

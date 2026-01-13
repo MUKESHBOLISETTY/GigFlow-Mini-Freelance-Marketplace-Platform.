@@ -44,7 +44,7 @@ const Header = () => {
             )}
             {user?.type === "Freelancer" && (
                 <Link
-                    to="/find-work"
+                    to="/freelancer/find-work"
                     className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 ${mobile ? "w-full" : ""
                         }`}
                     onClick={() => setOpen(false)}
@@ -55,7 +55,13 @@ const Header = () => {
 
             {is_logged_in && user && (
                 <Link
-                    to={user.type === 'Client' ? '/client/profile' : '/profile'}
+                    to={
+                        user?.type === "Client"
+                            ? "/client/profile"
+                            : user?.type === "Freelancer"
+                                ? "/freelancer/profile"
+                                : "/profile"
+                    }
                     className={`px-3 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-slate-800 ${mobile ? "w-full" : ""
                         }`}
                     onClick={() => setOpen(false)}

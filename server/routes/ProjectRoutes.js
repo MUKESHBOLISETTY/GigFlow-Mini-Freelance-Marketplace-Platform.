@@ -21,7 +21,7 @@ router.post("/", limiter, authenticateUser, createProject);
 
 router.get("/getClientProjects", limiter, authenticateUser, getProjectsClient);
 
-router.get("/", fetchlimiter, authenticateUser, fetchAllProjects);
+router.get("/", fetchlimiter, fetchAllProjects);
 
 router.get("/:id", limiter, authenticateUser, getProjectById);
 
