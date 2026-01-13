@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     X,
     Briefcase,
@@ -7,16 +7,31 @@ import {
 import toast from 'react-hot-toast';
 import useBids from '../../hooks/useBids';
 
-const BidModal = ({ projectId, isOpen, onClose }) => {
+const BidModal = ({ project, onClose }) => {
     const { registerBid } = useBids();
+
     const [formData, setFormData] = useState({
-        projectId,
+        projectId: '',
         proposalText: '',
         bidAmount: 0
     });
+    useEffect(() => {
+        if (project?._id) {
+            setFormData((prev) => ({
+                ...prev,
+                projectId: project._id,
+            }));
+        }
+    }, [project?._id]);
 
-    if (!isOpen) return null;
-
+    const handleClose = () => {
+        setFormData({
+            projectId: '',
+            proposalText: '',
+            bidAmount: 0
+        })
+        onClose()
+    }
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -24,10 +39,11 @@ const BidModal = ({ projectId, isOpen, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // if (!project._id) return toast.error("Something went wrong.", { duration: 2000, position: 'bottom-right' })
         if (!formData.projectId || !formData.proposalText || !formData.bidAmount) return toast.error("Please fill all required fields", { duration: 2000, position: 'bottom-right' })
-        await registerBid(formData)
+        const response = await registerBid(formData, handleClose)
     };
-
+    if (!project) return null;
     return (
         <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-slate-900/40 backdrop-blur-sm p-0 sm:p-6 transition-all">
             <div className="relative flex h-[92vh] w-full max-w-[520px] flex-col bg-white rounded-t-3xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom duration-300 sm:h-auto sm:max-h-[85vh] sm:rounded-3xl">
@@ -45,7 +61,7 @@ const BidModal = ({ projectId, isOpen, onClose }) => {
                         </div>
                         <h2 className="text-slate-900 text-lg font-bold tracking-tight">Register Bid</h2>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400">
+                    <button onClick={handleClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400">
                         <X size={20} />
                     </button>
                 </div>
@@ -84,7 +100,7 @@ const BidModal = ({ projectId, isOpen, onClose }) => {
                     <div className="p-6 bg-white border-t border-slate-100 flex gap-3 shrink-0">
                         <button
                             type="button"
-                            onClick={onClose}
+                            onClick={handleClose}
                             className="flex-1 h-12 rounded-2xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition-all"
                         >
                             Cancel

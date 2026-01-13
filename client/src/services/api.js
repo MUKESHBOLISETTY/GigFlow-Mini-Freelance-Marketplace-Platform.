@@ -34,15 +34,15 @@ export const authApi = {
 }
 
 export const gigsApi = {
-    getProjects: (params) => api.get('/gigs', {params}),
+    getProjects: (params) => api.get('/gigs', { params }),
     createGig: (data) => api.post('/gigs', data),
     getProjectById: (id) => api.get(`/gigs/${id}`),
 }
 
 export const bidsApi = {
-   createBid: (data) => api.post('/bids', data),
-   hire: (bidId, projectId) => api.patch(`/bids/${bidId}/${projectId}/hire`),
-   getBids: (params) => api.get('/bids', {params}),
+    createBid: (data) => api.post('/bids', data),
+    hire: (bidId, projectId) => api.patch(`/bids/${bidId}/${projectId}/hire`),
+    getBids: (params) => api.get('/bids', { params }),
 }
 
 export default api; 

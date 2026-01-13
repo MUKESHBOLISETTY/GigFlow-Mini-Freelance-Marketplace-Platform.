@@ -10,16 +10,18 @@ export const useBids = () => {
     const location = useLocation();
     const { bids_loading, bids, page, hasMore } = useSelector((state) => state.bids);
     const { loading, is_logged_in, user, error, email, navigation } = useSelector((state) => state.auth);
-    const registerBid = async (data) => {
+    const registerBid = async (data, handleClose) => {
         try {
             dispatch(setBidsLoading(true));
             const response = await bidsApi.createBid(data);
             if (response.data.message === "bid_registered") {
-                toast.success("Bid Registered Successfully")
+                handleClose()
+                toast.success("Bid Registered Successfully", { duration: 2000, position: 'bottom-right' })
             }
             dispatch(setBidsLoading(false));
             return response;
         } catch (error) {
+            handleClose()
             dispatch(setBidsLoading(false));
             throw error;
         }

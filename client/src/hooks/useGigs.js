@@ -106,7 +106,7 @@ export const useGigs = () => {
             dispatch(setJobsLoading(true));
             const response = await gigsApi.createGig(data);
             if (response.data.message === "project_posted") {
-                toast.success("Project Added Successfully")
+                toast.success("Project Added Successfully", { duration: 2000, position: 'bottom-right' })
             }
             dispatch(setJobsLoading(false));
             return response;

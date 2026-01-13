@@ -14,6 +14,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useGigs from '../../hooks/useGigs';
 import useBids from '../../hooks/useBids';
+import BidModal from '../client/BidModal';
 
 const ProjectDetailsPage = () => {
     const { id } = useParams();
@@ -23,6 +24,7 @@ const ProjectDetailsPage = () => {
     const { loading, is_logged_in, user, error, email, navigation } = useSelector((state) => state.auth);
 
     const { jobs_loading, jobs, page, hasMore, selectedProject } = useSelector((state) => state.jobs);
+    const [bidPopup, setBidPopup] = useState('')
     useEffect(() => {
         const getData = setTimeout(() => {
             fetchGigById(id);
@@ -181,19 +183,21 @@ const ProjectDetailsPage = () => {
                                     </div>
                                 </section>
                             ))}
-                        {user?.type !== "Client" && (
-                            <div className="flex justify-center bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-slate-100 mx-auto">
-                                <button
-                                    type='button' className="sm:w-1/2 w-full flex items-center justify-center gap-3 bg-[#137fec] text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/20 hover:bg-blue-600 active:scale-[0.98] transition-all"
-                                >
-                                    <span className="text-lg">Submit Proposal</span>
-                                    <Send size={20} />
-                                </button>
-                            </div>
-                        )}
+                        {user?.type !== "Client" &&
+                            selectedProject && (
+                                <div className="flex justify-center bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-slate-100 mx-auto">
+                                    <button
+                                        type='button' onClick={() => { setBidPopup(selectedProject) }} className="sm:w-1/2 w-full flex items-center justify-center gap-3 bg-[#137fec] text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/20 hover:bg-blue-600 active:scale-[0.98] transition-all"
+                                    >
+                                        <span className="text-lg">Submit Proposal</span>
+                                        <Send size={20} />
+                                    </button>
+                                </div>
+                            )}
                     </>
                 )}
             </div>
+            <BidModal project={bidPopup} onClose={() => setBidPopup("")} />
         </>
     );
 };
