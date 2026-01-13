@@ -499,7 +499,7 @@ export const markNotificationAsRead = async (req, res) => {
         if (!user) {
             return respond(res, "User or Notification Not Found.", 404, false);
         }
-        await sendUserUpdater(userId);
+        await sendUserUpdater(user.email);
         return respond(res, "notification_updated", 200, true);
     } catch (err) {
         return respond(res, "Error Occured", 500, false);
