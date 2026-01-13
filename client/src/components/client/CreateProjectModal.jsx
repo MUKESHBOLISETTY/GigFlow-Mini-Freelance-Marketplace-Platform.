@@ -52,7 +52,6 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.title || !formData.description || !formData.budgetRange || !formData.contractAddress || !formData.deadline) return toast.error("Please fill all required fields", { duration: 2000, position: 'bottom-right' })
-        console.log(formData);
         await createGig(formData)
     };
 

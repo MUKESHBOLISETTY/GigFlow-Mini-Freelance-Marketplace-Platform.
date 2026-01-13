@@ -47,9 +47,6 @@ const Profile = () => {
           <div className="px-6 py-4">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-[#0d141b] text-lg font-bold">Bio</h3>
-              <button className="text-[#137fec] p-1 hover:bg-blue-50 rounded-md transition-colors">
-                <Pencil size={18} />
-              </button>
             </div>
             <p className="text-slate-600 text-base leading-relaxed">
               {user.additionalDetails?.bio ? user.additionalDetails?.bio : 'No Bio Found'}

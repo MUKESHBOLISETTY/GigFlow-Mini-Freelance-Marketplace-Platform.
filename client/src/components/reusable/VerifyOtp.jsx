@@ -40,7 +40,6 @@ const VerifyOtp = ({ setShowOtpPopup, email }) => {
     const handleOtpVerification = async (e) => {
         e.preventDefault();
         const response = await verifyOtp(email, otp);
-        console.log(response)
         if (response.data.message === "otpverified") {
             toast.success('Otp Verified Successfully', {
                 duration: 2000,
