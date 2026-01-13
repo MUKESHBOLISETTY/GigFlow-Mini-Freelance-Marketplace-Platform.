@@ -18,6 +18,7 @@ import VerifyOtp from '../../components/reusable/VerifyOtp';
 import { useDispatch, useSelector } from 'react-redux';
 import useAuth from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
+import Header from '../../components/reusable/Header';
 
 const Login = () => {
     const navigate = useNavigate()
@@ -114,8 +115,8 @@ const Login = () => {
     };
     return (
         <>
+            <Header />
             <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
-
                 <div className="hidden lg:block absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
                 <div className="hidden lg:block absolute -top-24 -right-24 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Toaster } from 'react-hot-toast';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import TestPage from './pages/TestPage';
+import LandingPage from './pages/LandingPage';
 import useAuth from './hooks/useAuth';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -64,7 +64,7 @@ function AppContent() {
         <Route path='/signup' element={<SignUp />} />
 
         {/* FREELANCER PAGES */}
-        <Route path='/' element={<TestPage />} />
+        <Route path='/' element={<LandingPage />} />
         <Route path='/find-work' element={<FindWorkPage />} />
         <Route path='/project/:id' element={<ProjectDetailsPage />} />
 

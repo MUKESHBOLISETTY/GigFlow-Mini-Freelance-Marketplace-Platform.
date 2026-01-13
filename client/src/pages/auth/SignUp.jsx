@@ -16,6 +16,7 @@ import useAuth from '../../hooks/useAuth';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import VerifyOtp from '../../components/reusable/VerifyOtp';
+import Header from '../../components/reusable/Header';
 
 const SignUp = () => {
     const navigate = useNavigate()
@@ -55,6 +56,7 @@ const SignUp = () => {
     };
     return (
         <>
+            <Header />
             <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 md:p-8">
                 <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl shadow-slate-200/60 overflow-hidden border border-slate-200">
 
@@ -214,11 +216,6 @@ const SignUp = () => {
                                 </div>
                             </div>
 
-                            <p className="text-xs text-center text-slate-500 leading-relaxed max-w-md mx-auto">
-                                By signing up, you agree to our <a className="text-blue-600 hover:underline font-semibold mx-1" href="#">Terms of Service</a>
-                                and
-                                <a className="text-blue-600 hover:underline font-semibold mx-1" href="#">Privacy Policy</a>.
-                            </p>
 
                             <button
                                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 transition-all transform active:scale-[0.98]"
