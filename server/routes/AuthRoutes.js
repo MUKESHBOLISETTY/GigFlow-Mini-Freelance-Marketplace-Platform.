@@ -1,6 +1,6 @@
 import express from "express";
 import { rateLimit } from 'express-rate-limit'
-import { getUserById, login, resendOtp, resetPassword, sendForgotPasswordOtp, signup, verifyForgotPasswordOtp, verifyOtp } from "../controllers/AuthController.js";
+import { getUserById, login, LogoutUser, resendOtp, resetPassword, sendForgotPasswordOtp, signup, verifyForgotPasswordOtp, verifyOtp } from "../controllers/AuthController.js";
 import { getUser } from "../middlewares/ServerSentUpdates.js";
 import { authenticateUser } from "../middlewares/AuthMiddleware.js";
 const router = express.Router();
@@ -18,6 +18,8 @@ const UserFetchLimiter = rateLimit({
 })
 
 router.post("/login", limiter, login);
+
+router.post("/logout", limiter, LogoutUser);
 
 router.post("/signup", limiter, signup);
 

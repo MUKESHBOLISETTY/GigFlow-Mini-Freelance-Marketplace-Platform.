@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 const initialState = {
   loading: false,
   email: localStorage.getItem("email") ? localStorage.getItem("email") : null,
-  is_logged_in: Cookies.get('is_logged_in') == "true" ? Cookies.get('is_logged_in') : false,
+  is_logged_in: localStorage.getItem("is_logged_in") ? localStorage.getItem("is_logged_in") : null,
   user: null,
   error: null,
   navigation: null

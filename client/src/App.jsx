@@ -41,15 +41,15 @@ function App() {
   const { setupUserSSE } = useAuth();
   const { setupProjectsSSE } = useGigs();
   useEffect(() => {
-    if (is_logged_in !== "true") return;
-    const cleanupUser = setupUserSSE();
-    const cleanupProjects = setupProjectsSSE();
-    return () => {
-      cleanupUser();
-      cleanupProjects();
-    };
-
-  }, [is_logged_in, email, setupUserSSE, setupProjectsSSE]);
+    if (is_logged_in) {
+      const cleanupUser = setupUserSSE();
+      const cleanupProjects = setupProjectsSSE();
+      return () => {
+        cleanupUser();
+        cleanupProjects();
+      };
+    }
+  }, [is_logged_in, setupUserSSE, setupProjectsSSE]);
   return (
     <AppContent />
   );

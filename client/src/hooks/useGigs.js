@@ -17,9 +17,8 @@ export const useGigs = () => {
     const setupProjectsSSE = useCallback(() => {
         let eventSource;
         let reconnectTimeout;
-        if (is_logged_in !== "true") {
-            dispatch(setError("Authentication required for real-time updates."));
-            return;
+        if (!is_logged_in) {
+            return () => { };
         }
         const connect = () => {
             eventSource = new EventSource(`${import.meta.env.VITE_API_URL}/gigs/getClientProjects`, { withCredentials: true });

@@ -47,6 +47,7 @@ const VerifyOtp = ({ setShowOtpPopup, email }) => {
                 position: 'bottom-right',
             });
             localStorage.setItem("email", response.data.data);
+            localStorage.setItem("is_logged_in", true);
             dispatch(setEmail(response.data.data));
             if (navigation) {
                 navigate(navigation)

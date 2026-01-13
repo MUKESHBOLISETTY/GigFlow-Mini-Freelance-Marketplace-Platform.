@@ -25,6 +25,7 @@ api.interceptors.response.use(
 // AUTH ENDPOINTS
 export const authApi = {
     login: (data) => api.post('/auth/login', data),
+    logout: () => api.post('/auth/logout'),
     signup: (data) => api.post('/auth/signup', data),
     verifyOtp: (email, otp) => api.post('/auth/verifyOtp', { email, otp }),
     resendOtp: (email, type) => api.post('/auth/resendOtp', { email, type }),

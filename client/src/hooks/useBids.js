@@ -32,7 +32,7 @@ export const useBids = () => {
             dispatch(setBidsLoading(true));
             const response = await bidsApi.hire(bidId, projectId);
             if (response.data.message === "freelancer_hired") {
-                toast.success("Freelancer Hired Successfully")
+                toast.success("Freelancer Hired Successfully", { duration: 2000, position: 'bottom-right' })
             }
             dispatch(setBidsLoading(false));
             return response;

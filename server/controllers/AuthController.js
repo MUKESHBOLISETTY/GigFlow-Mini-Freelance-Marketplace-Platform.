@@ -143,12 +143,6 @@ export const login = async (req, res) => {
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 });
 
-                res.cookie("is_logged_in", "true", {
-                    httpOnly: false,
-                    secure: true,
-                    sameSite: "Lax",
-                    maxAge: 7 * 24 * 60 * 60 * 1000
-                });
                 return res.status(200).json({
                     success: true,
                     message: "userlogin",
@@ -202,12 +196,6 @@ export const verifyOtp = async (req, res) => {
                         maxAge: 7 * 24 * 60 * 60 * 1000
                     });
 
-                    res.cookie("is_logged_in", "true", {
-                        httpOnly: false,
-                        secure: true,
-                        sameSite: "Lax",
-                        maxAge: 7 * 24 * 60 * 60 * 1000
-                    });
                     return respond(res, "otpverified", 200, true, user.email);
                 }
             } else {
@@ -295,6 +283,7 @@ export const resendOtp = async (req, res) => {
         return respond(res, "Error Occured", 500, false);
     }
 }
+
 
 export const sendForgotPasswordOtp = async (req, res) => {
     try {
@@ -483,5 +472,18 @@ export const getUserById = async (req, res) => {
         return respond(res, "user_found", 200, true, user);
     } catch (err) {
         return respond(res, "Error Occured", 500, false);
+    }
+}
+
+export const LogoutUser = async (req, res) => {
+    try {
+        res.cookie('token', '', {
+            httpOnly: true,
+            expires: new Date(0),
+        });
+        return respond(res, "Logged out", 200, true);
+    } catch (err) {
+        return respond(res, "Error Occured", 500, false);
+
     }
 }

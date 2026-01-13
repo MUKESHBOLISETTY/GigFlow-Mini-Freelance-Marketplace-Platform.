@@ -22,9 +22,9 @@ export const useAuth = () => {
     const setupUserSSE = useCallback(() => {
         let eventSource;
         let reconnectTimeout;
-        if (is_logged_in !== "true") {
+        if (!is_logged_in) {
             dispatch(setError("Authentication required for real-time updates."));
-            return () => { };;
+            return () => { };
         }
         const connect = () => {
             eventSource = new EventSource(`${import.meta.env.VITE_API_URL}/auth/getUser/${email}`, { withCredentials: true });
@@ -142,10 +142,11 @@ export const useAuth = () => {
 
     const handleLogout = async (navigate) => {
         try {
-            Cookies.set("is_logged_in", false);
             localStorage.removeItem("email");
+            localStorage.removeItem("is_logged_in");
             dispatch(resetAuth());
             navigate('/')
+            await authApi.logout()
             toast.success('Logged Out Successfully', {
                 duration: 2000,
                 position: 'bottom-right',
@@ -164,6 +165,7 @@ export const useAuth = () => {
             dispatch(setLoading(false));
             if (response.data.message == "userlogin") {
                 localStorage.setItem("email", response.data.UserSchema);
+                localStorage.setItem("is_logged_in", true);
                 dispatch(setEmail(response.data.UserSchema));
                 dispatch(setLoginStatus(true));
                 if (navigation) {
