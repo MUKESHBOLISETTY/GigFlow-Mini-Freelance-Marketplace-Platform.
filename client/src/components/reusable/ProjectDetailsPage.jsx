@@ -13,10 +13,12 @@ import Header from './Header';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useGigs from '../../hooks/useGigs';
+import useBids from '../../hooks/useBids';
 
 const ProjectDetailsPage = () => {
     const { id } = useParams();
     const { fetchGigById } = useGigs()
+    const { hire } = useBids();
     const dispatch = useDispatch();
     const { loading, is_logged_in, user, error, email, navigation } = useSelector((state) => state.auth);
 
@@ -27,6 +29,10 @@ const ProjectDetailsPage = () => {
         }, 500)
         return () => clearTimeout(getData)
     }, [dispatch, id]);
+
+    const handleHire = async (bidId) => {
+        await hire(bidId, selectedProject._id)
+    }
 
     return (
         <>
@@ -167,8 +173,7 @@ const ProjectDetailsPage = () => {
                                                         ))}
                                                     </div>
                                                     <div className="flex items-center gap-3">
-                                                        <button className="px-5 py-2.5 bg-white  text-slate-700  border border-slate-200  font-bold rounded-lg text-sm hover:bg-slate-50 transition-colors">View Profile</button>
-                                                        <button className="px-8 py-2.5 bg-primary text-white font-bold rounded-lg text-sm shadow-md shadow-primary/20 hover:bg-blue-600 hover:scale-[1.02] active:scale-95 transition-all">Hire Now</button>
+                                                        <button type='button' onClick={() => { handleHire(bid._id) }} className="px-8 py-2.5 bg-primary text-white font-bold rounded-lg text-sm shadow-md shadow-primary/20 hover:bg-blue-600 hover:scale-[1.02] active:scale-95 transition-all">Hire Now</button>
                                                     </div>
                                                 </div>
                                             </div>

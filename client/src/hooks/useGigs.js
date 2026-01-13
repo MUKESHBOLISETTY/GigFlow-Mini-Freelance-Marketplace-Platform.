@@ -92,7 +92,6 @@ export const useGigs = () => {
             dispatch(setJobsLoading(true));
             const response = await gigsApi.getProjectById(data);
             if (response.data.message === "project_found") {
-                console.log(response.data)
                 dispatch(setSelectedProject(response.data.data))
             }
             dispatch(setJobsLoading(false));

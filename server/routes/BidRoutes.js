@@ -10,7 +10,7 @@ const limiter = rateLimit({
     legacyHeaders: false,
 })
 
-router.patch("/:bidId/hire", limiter, authenticateUser, hireFreelancer);
+router.patch("/:bidId/:projectId/hire", limiter, authenticateUser, hireFreelancer);
 
 router.post("/", limiter, authenticateUser, createBid);
 

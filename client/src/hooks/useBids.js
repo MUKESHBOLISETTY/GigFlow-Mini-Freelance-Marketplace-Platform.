@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { bidsApi } from "../services/api";
 import { appendBids, setBids, setBidsLoading, setHasMore } from "../redux/slices/bidsSlice";
+import toast from "react-hot-toast";
 
 export const useBids = () => {
     const dispatch = useDispatch();
@@ -24,10 +25,10 @@ export const useBids = () => {
         }
     };
 
-    const hire = async (data) => {
+    const hire = async (bidId, projectId) => {
         try {
             dispatch(setBidsLoading(true));
-            const response = await bidsApi.hire(data);
+            const response = await bidsApi.hire(bidId, projectId);
             if (response.data.message === "freelancer_hired") {
                 toast.success("Freelancer Hired Successfully")
             }

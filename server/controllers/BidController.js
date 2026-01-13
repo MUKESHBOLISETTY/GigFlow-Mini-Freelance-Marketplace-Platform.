@@ -145,9 +145,10 @@ export const hireFreelancer = async (req, res) => {
 
     try {
         session.startTransaction();
-        const { projectId } = req.body;
-        const bidId = req.params.bidId;
-
+        const { projectId, bidId } = req.params;
+        if (!projectId || !bidId) {
+            return respond(res, "Something went wrong", 400, false);
+        }
         const project = await Project.findById(projectId).session(session);
         if (!project) {
             return respond(res, "Project Not Found.", 400, false);

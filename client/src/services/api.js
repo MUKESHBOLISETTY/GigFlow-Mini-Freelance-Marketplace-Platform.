@@ -41,7 +41,7 @@ export const gigsApi = {
 
 export const bidsApi = {
    createBid: (data) => api.post('/bids', data),
-   hire: (bidId) => api.patch(`/bids/${bidId}/hire`),
+   hire: (bidId, projectId) => api.patch(`/bids/${bidId}/${projectId}/hire`),
    getBids: (params) => api.get('/bids', {params}),
 }
 

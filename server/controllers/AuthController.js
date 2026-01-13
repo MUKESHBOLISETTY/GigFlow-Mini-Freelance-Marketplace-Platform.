@@ -139,13 +139,15 @@ export const login = async (req, res) => {
                 res.cookie("token", UserSchema.token, {
                     httpOnly: true,
                     secure: true,
-                    sameSite: "Lax"
+                    sameSite: "Lax",
+                    maxAge: 7 * 24 * 60 * 60 * 1000
                 });
 
                 res.cookie("is_logged_in", "true", {
                     httpOnly: false,
                     secure: true,
-                    sameSite: "Lax"
+                    sameSite: "Lax",
+                    maxAge: 7 * 24 * 60 * 60 * 1000
                 });
                 return res.status(200).json({
                     success: true,
@@ -196,13 +198,15 @@ export const verifyOtp = async (req, res) => {
                     res.cookie("token", user.token, {
                         httpOnly: true,
                         secure: true,
-                        sameSite: "Lax"
+                        sameSite: "Lax",
+                        maxAge: 7 * 24 * 60 * 60 * 1000
                     });
 
                     res.cookie("is_logged_in", "true", {
                         httpOnly: false,
                         secure: true,
-                        sameSite: "Lax"
+                        sameSite: "Lax",
+                        maxAge: 7 * 24 * 60 * 60 * 1000
                     });
                     return respond(res, "otpverified", 200, true, user.email);
                 }
