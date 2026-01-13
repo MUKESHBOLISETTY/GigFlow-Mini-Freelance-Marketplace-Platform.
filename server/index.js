@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
 
     socket.on('join', (userId) => {
         socket.join(userId);
-        console.log(`User ${userId} joined room`);
+        console.log(`User ${userId} has been connected to socket`);
     });
 
     socket.on('disconnect', () => {

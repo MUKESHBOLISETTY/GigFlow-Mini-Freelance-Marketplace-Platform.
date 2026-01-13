@@ -180,13 +180,18 @@ export const hireFreelancer = async (req, res) => {
             { status: 'rejected' },
             { session }
         );
+        const notificationMessage = `You were hired for ${project.title}`;
         const user = await Freelancer.findByIdAndUpdate(hiredBid.freelancerId, {
             $push: { portfolio: project._id },
-            $push: { notifications: [{ message: `You were hired for ${project.title}`, read: false }] }
-        }, { new: true });
+            $push: { notifications: [{ message: notificationMessage, read: false }] }
+        }, { new: true, session });
         await sendUserUpdater(user.email);
         await session.commitTransaction();
-
+        const io = req.app?.get('io');
+        io.to(hiredBid.freelancerId.toString()).emit('notification', {
+            type: 'HIRED',
+            message: notificationMessage
+        });
         return respond(res, "freelancer_hired", 200, true);
 
     } catch (error) {

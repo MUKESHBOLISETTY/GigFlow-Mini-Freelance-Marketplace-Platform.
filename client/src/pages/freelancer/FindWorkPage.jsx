@@ -69,16 +69,6 @@ const FindWorkPage = () => {
           </div>
         </div>
 
-        <div className="flex gap-2 p-4 overflow-x-auto bg-white scrollbar-hide">
-          <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#137fec] text-white px-4 shadow-sm">
-            <span className="text-sm font-semibold">Filter</span>
-            <SlidersHorizontal size={16} />
-          </button>
-          <FilterButton label="Job Type" />
-          <FilterButton label="Budget" />
-          <FilterButton label="Experience" />
-        </div>
-
         <div className="flex items-center justify-between px-4 pt-6 pb-2">
           <h3 className="text-[#0d141b] text-lg font-bold leading-tight tracking-tight">Recent Projects</h3>
         </div>
@@ -108,11 +98,5 @@ const FindWorkPage = () => {
   );
 };
 
-const FilterButton = ({ label }) => (
-  <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f5] px-4">
-    <span className="text-[#0d141b] text-sm font-medium">{label}</span>
-    <ChevronDown size={16} className="text-slate-400" />
-  </button>
-);
 
 export default FindWorkPage;

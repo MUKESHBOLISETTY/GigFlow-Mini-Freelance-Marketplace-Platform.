@@ -189,7 +189,9 @@ const Header = () => {
                                                     </span>
                                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                         {!notification.read && (
-                                                            <button type="button" onClick={() => { handleMarkAsRead(notification._id) }} title="Mark as read" className="text-blue-600 hover:bg-blue-100 p-1 rounded">
+                                                            <button
+                                                                type="button"
+                                                                disabled={loading} onClick={() => { handleMarkAsRead(notification._id) }} title="Mark as read" className="text-blue-600 hover:bg-blue-100 p-1 rounded">
                                                                 <CheckCheck size={14} />
                                                             </button>
                                                         )}

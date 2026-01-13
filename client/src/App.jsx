@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import useAuth from './hooks/useAuth';
@@ -71,6 +71,28 @@ function App() {
       };
     }
   }, [is_logged_in, setupProjectsSSE]);
+
+  const userId = user?._id;
+  useEffect(() => {
+    const socket = io(import.meta.env.VITE_SOCKET_URL, {
+      withCredentials: true,
+    });
+
+    if (!userId) return;
+    socket.on('connect', () => {
+      console.log("Connected to WebSocket:", socket.id);
+      socket.emit('join', userId);
+    });
+
+    socket.on('notification', (data) => {
+      toast.success(data.message, { duration: 3000, position: 'bottom-right' });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [userId]);
+
   return (
     <AppContent />
   );
