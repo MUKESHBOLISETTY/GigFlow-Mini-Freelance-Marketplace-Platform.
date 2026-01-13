@@ -17,8 +17,8 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
         description: '',
         budgetType: 'fixed',
         budgetRange: '',
-        skillsRequired: ['UI Design', 'React'],
-        contractAddress: 'Remote',
+        skillsRequired: ['Communication Skills'],
+        contractAddress: '',
         deadline: ''
     });
 
@@ -100,6 +100,18 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
                             onChange={handleChange}
                             className="w-full min-h-[120px] rounded-xl border-slate-200 bg-slate-50/50 p-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none resize-none"
                             placeholder="Describe requirements, goals, and deliverables..."
+                            required
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-bold text-slate-700 ml-1">Location</label>
+                        <textarea
+                            name="contractAddress"
+                            value={formData.contractAddress}
+                            onChange={handleChange}
+                            className="w-full rounded-xl border-slate-200 bg-slate-50/50 px-4 h-12 text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                            placeholder="Enter Project Location (eg.. Remote)"
                             required
                         />
                     </div>

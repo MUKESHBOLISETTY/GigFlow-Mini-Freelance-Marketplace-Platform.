@@ -14,6 +14,7 @@ import CreateProjectModal from '../../components/client/CreateProjectModal';
 const ManageProjects = () => {
     const dispatch = useDispatch()
     const { fetchGigs } = useGigs()
+    const [openCreateProject, setOpenCreateProject] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const { projects_loading, projects, page, hasMore } = useSelector((state) => state.projects);
 
@@ -45,7 +46,17 @@ const ManageProjects = () => {
                 </div>
 
                 <div className="flex items-center justify-between px-4 pt-6 pb-2">
-                    <h3 className="text-[#0d141b] text-lg font-bold leading-tight tracking-tight">Projects</h3>
+                    <h3 className="text-[#0d141b] text-lg font-bold leading-tight tracking-tight">
+                        Projects
+                    </h3>
+
+                    <button
+                        type="button"
+                        onClick={() => setOpenCreateProject(true)}
+                        className="flex items-center gap-2 rounded-xl bg-[#137fec] px-4 py-2 text-white text-sm font-bold shadow-sm hover:bg-blue-600 active:scale-95 transition-all"
+                    >
+                        Create Project
+                    </button>
                 </div>
 
                 <div className="space-y-3 p-4">
@@ -60,7 +71,8 @@ const ManageProjects = () => {
                     )}
                 </div>
             </main>
-
+            <CreateProjectModal isOpen={openCreateProject} onClose={() => setOpenCreateProject(false)}
+            />
         </div>
     );
 };

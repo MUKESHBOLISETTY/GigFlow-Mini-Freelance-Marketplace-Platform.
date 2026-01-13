@@ -14,7 +14,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useGigs from '../../hooks/useGigs';
 import useBids from '../../hooks/useBids';
-import BidModal from '../client/BidModal';
+import BidModal from '../freelancer/BidModal';
 
 const ProjectDetailsPage = () => {
     const { id } = useParams();
