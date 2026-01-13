@@ -1,13 +1,7 @@
 import React from 'react';
 import {
-  ArrowLeft,
-  Share2,
   Verified,
-  MapPin,
-  Award,
   Pencil,
-  Star,
-  Heart,
   Mail
 } from 'lucide-react';
 import Header from './Header';
@@ -15,26 +9,6 @@ import { useSelector } from 'react-redux';
 
 const Profile = () => {
   const { loading, is_logged_in, user, error, email, navigation } = useSelector((state) => state.auth);
-
-  const skills = [
-    "React.js", "Node.js", "TypeScript", "AWS Architecture",
-    "Tailwind CSS", "PostgreSQL", "GraphQL", "UI/UX Design"
-  ];
-
-  const workHistory = [
-    {
-      title: "Enterprise SaaS Dashboard Redesign",
-      price: "$4,500",
-      review: "Alex is a top-tier developer. He understood our requirements immediately and delivered high-quality code. Communication was excellent throughout the project.",
-      date: "Dec 15, 2023 - Jan 22, 2024"
-    },
-    {
-      title: "E-commerce API Integration",
-      price: "$1,200",
-      review: "Very efficient and professional. Fixed our critical bugs in record time. Highly recommended for any Node.js work.",
-      date: "Oct 2, 2023 - Oct 10, 2023"
-    }
-  ];
 
   return (
     <div className="bg-[#f6f7f8] font-sans text-[#0d141b] min-h-screen">
@@ -103,7 +77,7 @@ const Profile = () => {
                 <div key={index} className="p-4 rounded-2xl border border-slate-100 bg-white mb-4 shadow-sm">
                   <div className="flex justify-between items-start mb-2">
                     <h4 className="text-[#0d141b] font-bold leading-tight flex-1 mr-2">{item.title}</h4>
-                    <span className="text-[#137fec] font-bold text-sm">{item.projectRef.contractAddress}</span>
+                    <span className="text-[#137fec] font-bold text-sm">{item.contractAddress}</span>
                   </div>
                 </div>
               ))}

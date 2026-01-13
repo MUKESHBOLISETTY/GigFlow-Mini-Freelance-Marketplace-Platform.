@@ -117,7 +117,9 @@ export const fetchAllProjects = async (req, res) => {
         if (searchType) {
             matchStage.$or = [
                 { title: { $regex: searchType, $options: "i" } },
-                { description: { $regex: searchType, $options: "i" } }
+                { description: { $regex: searchType, $options: "i" } },
+                { budgetType: { $regex: searchType, $options: "i" } },
+                { status: { $regex: searchType, $options: "i" } }
             ];
         }
         if (jobType) {

@@ -448,7 +448,10 @@ export const resetPassword = async (req, res) => {
 
 export const getUserData = async (email) => {
     try {
-        const user = await Freelancer.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'bids' }).lean() || await Client.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'projects' }).lean();
+        const user = await Freelancer.findOne({ email, verified: true }).select("-password -token -forgottoken").populate([
+            { path: 'bids' },
+            { path: 'portfolio' }
+        ]).lean() || await Client.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'projects' }).lean();
         if (user?.verified !== true || !user) {
             throw new Error("User not found");
         } else {
@@ -485,5 +488,18 @@ export const LogoutUser = async (req, res) => {
     } catch (err) {
         return respond(res, "Error Occured", 500, false);
 
+    }
+}
+
+export const markNotificationAsRead = async (req, res) => {
+    try {
+        const { userId, notificationId } = req.body;
+        const user = await Freelancer.findOneAndUpdate({ _id: userId, "notifications._id": notificationId }, { $set: { "notifications.$.read": true } }, { new: true }).lean() || await Client.findOneAndUpdate({ _id: userId, "notifications._id": notificationId }, { $set: { "notifications.$.read": true } }, { new: true }).lean();
+        if (!user) {
+            return respond(res, "User or Notification Not Found.", 404, false);
+        }
+        return respond(res, "notification_updated", 200, true);
+    } catch (err) {
+        return respond(res, "Error Occured", 500, false);
     }
 }

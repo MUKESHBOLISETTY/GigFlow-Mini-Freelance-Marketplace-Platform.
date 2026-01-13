@@ -1,17 +1,39 @@
 import express from 'express';
 import cors from 'cors';
+import http from 'http';
 import cookieParser from "cookie-parser";
 import { connect } from './config/database.js';
 import userRoutes from './routes/AuthRoutes.js';
 import projectRoutes from './routes/ProjectRoutes.js';
 import bidRoutes from './routes/BidRoutes.js';
 import dotenv from "dotenv"
+import { Server } from 'socket.io';
 import helmet from 'helmet';
 dotenv.config()
 
 const app = express();
+const server = http.createServer(app);
 const port = process.env.port || 5000;
+const io = new Server(server, {
+    cors: {
+        origin: process.env.origin,
+        credentials: true,
+    },
+});
 
+app.set('io', io);
+io.on('connection', (socket) => {
+    console.log('New client connected:', socket.id);
+
+    socket.on('join', (userId) => {
+        socket.join(userId);
+        console.log(`User ${userId} joined room`);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
 connect();
 app.use(express.json());
 app.use(cookieParser());
@@ -19,7 +41,7 @@ app.use(cookieParser());
 app.use(helmet());
 
 const corsoptions = {
-    origin: 'http://localhost:5173',
+    origin: process.env.origin,
     methods: "GET, POST, PUT, DELETE, HEAD, PATCH",
     credentials: true,
 }
@@ -38,6 +60,4 @@ app.get('/', (req, res) => {
 });
 
 
-app.listen(port, () => {
-    console.log(`Worker is listening on port ${port}.`);
-});
+server.listen(port, () => console.log(`Server running on port ${port}`));

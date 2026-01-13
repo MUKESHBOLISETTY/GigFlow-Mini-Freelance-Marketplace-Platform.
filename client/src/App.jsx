@@ -14,6 +14,7 @@ import Profile from './components/reusable/Profile';
 import ManageProjects from './pages/client/ManageProject';
 import useGigs from './hooks/useGigs';
 import ProjectDetailsPage from './components/reusable/ProjectDetailsPage';
+import io from 'socket.io-client';
 
 const ClientRoute = () => {
   const { user, loading } = useSelector((state) => state.auth);

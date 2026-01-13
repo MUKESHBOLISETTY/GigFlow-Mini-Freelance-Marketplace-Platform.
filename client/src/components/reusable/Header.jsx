@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Bell, Mail, Menu, X } from "lucide-react";
+import { Briefcase, Menu, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { useSelector } from "react-redux";
@@ -107,12 +107,9 @@ const Header = () => {
         <header className="sticky top-0 z-50 bg-[#1a2632] border-b border-slate-800">
             <div className="flex items-center p-4 justify-between mx-auto">
                 <div className="flex items-center gap-3">
-                    <div
-                        className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 h-10 border-2 border-[#137fec]/20"
-                        style={{
-                            backgroundImage: 'url("https://api.dicebear.com/7.x/avataaars/svg?seed=Felix")',
-                        }}
-                    />
+                    <div className="w-10 h-10 rounded-full bg-[#137fec]/10 border-2 border-[#137fec]/20 flex items-center justify-center">
+                        <Briefcase className="w-5 h-5 text-[#137fec]" />
+                    </div>
                     <h2 className="text-white text-lg font-bold leading-tight tracking-tight">
                         GigFlow
                     </h2>

@@ -51,6 +51,13 @@ const ClientSchema = new mongoose.Schema(
             totalProjectsPosted: { type: Number, default: 0 },
             totalSpent: { type: Number, default: 0 },
         },
+        notifications: [
+            {
+                message: { type: String, required: true },
+                read: { type: Boolean, default: false },
+                createdAt: { type: Date, default: Date.now },
+            }
+        ],
         projects: [
             {
                 type: mongoose.Schema.Types.ObjectId,
