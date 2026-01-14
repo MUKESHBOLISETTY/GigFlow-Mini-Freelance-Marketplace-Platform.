@@ -84,7 +84,7 @@ function App() {
     if (!socketRef.current) {
       socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
         withCredentials: true,
-        transports: ["websocket", "polling"],
+        transports: ["websocket"],
         autoConnect: true,
         reconnection: true,
         reconnectionAttempts: 5,
