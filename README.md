@@ -18,8 +18,31 @@ ServiceHive is a freelance marketplace web app that connects clients and freelan
 	- Install: `cd client && npm install`
 	- Start: `npm run dev`
 
-**Env / Configuration**
-- Add your `.env` in `server/` with values for `MONGO_URI`, `JWT_SECRET`, `EMAIL_*` creds, and any other keys used in `config/database.js`.
+**Environment Examples**
+
+Below are example environment files for local or production use. Never commit real secrets to version control — keep values in your local `server/.env` and `client/.env` files or a secure secrets manager.
+
+- Client (`client/.env`):
+
+```dotenv
+VITE_API_URL=https://gigflow-node.onrender.com/api/v1
+VITE_SOCKET_URL=https://gigflow-node.onrender.com
+```
+
+- Server (`server/.env`):
+
+```dotenv
+origin=https://gig-flow-mini-freelance-marketplace.vercel.app
+port=5000
+MONGODBURL=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+MAIL_HOST=smtp.gmail.com
+MAIL_USER=your_email@gmail.com
+MAIL_PASS=your_email_password
+```
+
+Notes:
+- Replace `your_mongodb_connection_string`, `your_jwt_secret`, `your_email@gmail.com`, and `your_email_app_password` with real values stored securely.
 
 **Project Structure (high level)**
 - **server/**: Express app and API
@@ -46,6 +69,8 @@ ServiceHive is a freelance marketplace web app that connects clients and freelan
 
 
 ---
+
+
 
 
 
