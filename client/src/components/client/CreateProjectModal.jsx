@@ -35,10 +35,10 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
     const handleSkillKeyDown = (e) => {
         if (e.key === 'Enter' && skillInput.trim()) {
             e.preventDefault();
-            if (!formData.skills.includes(skillInput.trim())) {
+            if (!formData.skillsRequired.includes(skillInput.trim())) {
                 setFormData(prev => ({
                     ...prev,
-                    skills: [...prev.skills, skillInput.trim()]
+                    skillsRequired: [...prev.skillsRequired, skillInput.trim()]
                 }));
             }
             setSkillInput('');
@@ -48,7 +48,7 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
     const removeSkill = (skillToRemove) => {
         setFormData(prev => ({
             ...prev,
-            skills: prev.skills.filter(s => s !== skillToRemove)
+            skillsRequired: prev.skillsRequired.filter(s => s !== skillToRemove)
         }));
     };
 
