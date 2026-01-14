@@ -182,8 +182,10 @@ export const hireFreelancer = async (req, res) => {
         );
         const notificationMessage = `You were hired for ${project.title}`;
         const user = await Freelancer.findByIdAndUpdate(hiredBid.freelancerId, {
-            $push: { portfolio: project._id },
-            $push: { notifications: [{ message: notificationMessage, read: false }] }
+            $push: {
+                portfolio: project._id,
+                notifications: { message: notificationMessage, read: false }
+            }
         }, { new: true, session });
         await sendUserUpdater(user.email);
         await session.commitTransaction();
