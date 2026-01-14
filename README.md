@@ -44,55 +44,8 @@ ServiceHive is a freelance marketplace web app that connects clients and freelan
 - `POST /projects/:id/bid` — place a bid (freelancer)
 - Additional endpoints for OTP, password reset, and bid management follow controllers in `controllers/` and routes in `routes/`.
 
-**Project Graph**
-Below is a Mermaid diagram showing how main pieces interact.
-
-```mermaid
-graph LR
-	subgraph ClientSide
-		C[Client (React/Vite)]
-		F[Freelancer (React UI)]
-	end
-
-	subgraph ServerSide
-		S[Server (Express)]
-		AuthC[AuthController]
-		ProjectC[ProjectController]
-		BidC[BidController]
-		SSE[ServerSentUpdates Middleware]
-		Mail[mailSender]
-	end
-
-	DB[(MongoDB)]
-	Models[Models\n(Client, Freelancer, Project, Bid, OTP, ForgotPassword)]
-
-	C -->|HTTP / SSE| S
-	F -->|HTTP / SSE| S
-	S --> AuthC
-	S --> ProjectC
-	S --> BidC
-	S --> SSE
-	S --> Mail
-	AuthC --> Models
-	ProjectC --> Models
-	BidC --> Models
-	Models --> DB
-	SSE --> C
-	SSE --> F
-
-	style C fill:#f9f,stroke:#333,stroke-width:1px
-	style F fill:#f9f,stroke:#333,stroke-width:1px
-	style S fill:#bbf,stroke:#333,stroke-width:1px
-	style DB fill:#bfb,stroke:#333,stroke-width:1px
-```
-
-**Contributing**
-- Fork, create a branch, open a PR. Use descriptive commit messages.
-
-**Contacts**
-- Project maintainer: add your contact or email here.
 
 ---
 
-File created/updated: [README.md](README.md)
+
 
